@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
 from typing import Dict, List, Optional
 
@@ -76,6 +76,14 @@ class TaskStore:
     return tasks
 
 
+def calculate_next_sunday(day: datetime) -> datetime: 
+  if day.weekday() == 6:
+    return day + timedelta(days=7)
+  else: 
+    days_to_sunday = 6 - day.weekday()
+    return day + timedelta(days=days_to_sunday)
+
+
 def main():
   workflow_service = WorkflowyService()
   task_store = TaskStore(workflow_service)
@@ -85,10 +93,17 @@ def main():
   
   st.header("Goals")
   
+  filter_this_week = st.toggle("Goals due this week")
+  next_sunday = calculate_next_sunday(datetime.today())
+
   rows = []
   for task in tasks:
     if task.is_goal and not task.is_completed:
-      rows.append([task.name, task.due_date_str, ", ".join(task.tags)])
+      if filter_this_week:
+        if task.due_date and task.due_date <= next_sunday:  
+          rows.append([task.name, task.due_date_str, ", ".join(task.tags)])
+      else:
+        rows.append([task.name, task.due_date_str, ", ".join(task.tags)])
   
   rows.sort(key=lambda r: r[1] or datetime(9999, 12, 31).strftime("%Y.%m.%d"))
 
