@@ -136,7 +136,7 @@ def main():
 
     st.header("Goals")
 
-    filter_this_week = st.toggle("Goals due this week")
+    filter_this_week = st.toggle("Due this week")
     next_sunday = calculate_next_sunday(datetime.today())
 
     rows = []
