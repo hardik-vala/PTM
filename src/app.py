@@ -4,7 +4,6 @@ import re
 from typing import Dict, List, Optional
 
 import browser_cookie3
-import pandas as pd
 import requests
 import streamlit as st
 
@@ -18,10 +17,6 @@ class Task:
     tags: list[str]
     is_completed: bool
     is_goal: bool
-
-    @property
-    def due_date_str(self) -> Optional[str]:
-        return self.due_date.strftime("%Y.%m.%d") if self.due_date else None
 
 
 class WorkflowyService:
@@ -132,6 +127,9 @@ def main():
     def get_ancestor_str(task_id):
         return " > ".join([task_map[id].name for id in task_list.getAncestors(task_id)])
 
+    def format_due_date(due_date):
+        return due_date.strftime("%b %d") if due_date else "(none)"
+
     st.title("Hardik's PTM")
 
     st.header("Goals")
@@ -148,7 +146,7 @@ def main():
                         [
                             task.name,
                             get_ancestor_str(task.id),
-                            task.due_date_str,
+                            task.due_date,
                             ", ".join(task.tags),
                         ]
                     )
@@ -157,16 +155,24 @@ def main():
                     [
                         task.name,
                         get_ancestor_str(task.id),
-                        task.due_date_str,
+                        task.due_date,
                         ", ".join(task.tags),
                     ]
                 )
 
-    rows.sort(key=lambda r: r[1] or datetime(9999, 12, 31).strftime("%Y.%m.%d"))
+    rows.sort(key=lambda r: r[1] or datetime(9999, 12, 31))
 
-    df = pd.DataFrame(rows, columns=["Task", "Ancestors", "Due Date", "Tags"])
-
-    st.table(df)
+    for i, r in enumerate(rows):
+        due_date_formatted = format_due_date(r[2])
+        st.write(
+            f"""
+                <div>
+                    <p style="color: white; font-weight: bold">{i + 1}) {r[0]}</p>
+                    <p style="color: gray; font-size: 14px; margin-top: -10px">Due {due_date_formatted} • {r[1]}</p>
+                </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
 
 if __name__ == "__main__":
