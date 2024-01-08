@@ -15,13 +15,22 @@ class Task:
     name: str
     due_date: Optional[datetime]
     tags: list[str]
-    is_completed: bool
+    completion_date: Optional[datetime]
     is_goal: bool
 
 
 class WorkflowyService:
     def __init__(self):
         self.cj = browser_cookie3.chrome(domain_name="workflowy.com")
+
+    def fetch_initialization_data(self) -> Dict:
+        r = requests.get(
+            "https://workflowy.com/get_initialization_data?client_version=21&client_version_v2=28&no_root_children=1",
+            cookies=self.cj,
+            headers={"Accept": "application/json"},
+        )
+
+        return r.json()
 
     def fetch_tree_data(self) -> Dict:
         r = requests.get(
@@ -92,7 +101,10 @@ class TaskStore:
         )
 
     def fetch_tasks(self) -> TaskList:
+        initialization_data = self.workflowy_service.fetch_initialization_data()
         tree_data = self.workflowy_service.fetch_tree_data()
+
+        date_joined_timestamp_in_seconds = initialization_data["projectTreeData"]["mainProjectTreeInfo"]["dateJoinedTimestampInSeconds"]
 
         tasks = []
         for item in tree_data["items"]:
@@ -100,10 +112,14 @@ class TaskStore:
             due_date = self._extract_due_date(item)
             tags = self._extract_tags(item)
             name = self._extract_task_name(item)
-            is_completed = "cp" in item
+            if "cp" in item:
+                completion_date_timestamp_in_seconds = date_joined_timestamp_in_seconds + item["cp"]
+                completion_date = datetime.fromtimestamp(completion_date_timestamp_in_seconds)
+            else: 
+                completion_date = None
             is_goal = "#Goal" in tags
             task = Task(
-                item["id"], parent_id, name, due_date, tags, is_completed, is_goal
+                item["id"], parent_id, name, due_date, tags, completion_date, is_goal
             )
             tasks.append(task)
 
@@ -139,7 +155,7 @@ def main():
 
     rows = []
     for task in task_list.tasks:
-        if task.is_goal and not task.is_completed:
+        if task.is_goal and not task.completion_date:
             if filter_this_week:
                 if task.due_date and task.due_date <= next_sunday:
                     rows.append(
