@@ -1,6 +1,7 @@
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+from functools import wraps
 import json
 import os
 import re
@@ -44,45 +45,42 @@ class WorkflowyService:
        with open(path, "w") as f:
            json.dump(data, f)
 
-    def fetch_initialization_data(self) -> Dict:
-        cache_path = os.path.join(self.CACHE_DIR, "initialization_data.json")
-        
-        if self.read_cache:
-            initialization_data = self.load_from_cache(cache_path)
-            if initialization_data:
-                return initialization_data
+    def cache_it(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            cache_path = os.path.join(self.CACHE_DIR, f"{func.__name__}.json")
+            
+            if self.read_cache:
+                data = self.load_from_cache(cache_path)
+                if data:
+                    return data
+                    
+            data = func(self, *args, **kwargs)
+            
+            self.save_to_cache(data, cache_path)
+            
+            return data
+        return wrapper
 
+    @cache_it
+    def fetch_initialization_data(self) -> Dict:
         r = requests.get(
             "https://workflowy.com/get_initialization_data?client_version=21&client_version_v2=28&no_root_children=1",
             cookies=self.cj,
             headers={"Accept": "application/json"},
         )
 
-        initialization_data = r.json()
+        return r.json()
 
-        self.save_to_cache(initialization_data, cache_path)
-
-        return initialization_data 
-
+    @cache_it
     def fetch_tree_data(self) -> Dict:
-        cache_path = os.path.join(self.CACHE_DIR, "tree_data.json")
-        
-        if self.read_cache:
-            tree_data = self.load_from_cache(cache_path)
-            if tree_data:
-                return tree_data
-
         r = requests.get(
             "https://workflowy.com/get_tree_data",
             cookies=self.cj,
             headers={"Accept": "application/json"},
         )
 
-        tree_data = r.json()
-
-        self.save_to_cache(tree_data, cache_path)
-
-        return tree_data 
+        return r.json()
 
 
 class TaskList:
