@@ -220,6 +220,7 @@ def main():
     task_store = TaskStore(workflow_service)
     task_list = task_store.fetch_tasks()
 
+    st.set_page_config(page_title="Hardik's PTM")
     st.title("Hardik's PTM")
 
     goals_component(task_list)
