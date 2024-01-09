@@ -1,6 +1,8 @@
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+import json
+import os
 import re
 from typing import Dict, List, Optional
 
@@ -21,26 +23,66 @@ class Task:
 
 
 class WorkflowyService:
-    def __init__(self):
+    
+    CACHE_DIR = ".cache"
+
+    def __init__(self, read_cache: bool=False):
         self.cj = browser_cookie3.chrome(domain_name="workflowy.com")
+        self.read_cache = read_cache
+
+        if not os.path.exists(self.CACHE_DIR):
+           os.makedirs(self.CACHE_DIR)
+
+    def load_from_cache(self, path: str) -> Optional[Dict]:
+       if not os.path.exists(path):
+           return None
+
+       with open(path) as f:
+           return json.load(f)
+
+    def save_to_cache(self, data: Dict, path: str) -> None:
+       with open(path, "w") as f:
+           json.dump(data, f)
 
     def fetch_initialization_data(self) -> Dict:
+        cache_path = os.path.join(self.CACHE_DIR, "initialization_data.json")
+        
+        if self.read_cache:
+            initialization_data = self.load_from_cache(cache_path)
+            if initialization_data:
+                return initialization_data
+
         r = requests.get(
             "https://workflowy.com/get_initialization_data?client_version=21&client_version_v2=28&no_root_children=1",
             cookies=self.cj,
             headers={"Accept": "application/json"},
         )
 
-        return r.json()
+        initialization_data = r.json()
+
+        self.save_to_cache(initialization_data, cache_path)
+
+        return initialization_data 
 
     def fetch_tree_data(self) -> Dict:
+        cache_path = os.path.join(self.CACHE_DIR, "tree_data.json")
+        
+        if self.read_cache:
+            tree_data = self.load_from_cache(cache_path)
+            if tree_data:
+                return tree_data
+
         r = requests.get(
             "https://workflowy.com/get_tree_data",
             cookies=self.cj,
             headers={"Accept": "application/json"},
         )
 
-        return r.json()
+        tree_data = r.json()
+
+        self.save_to_cache(tree_data, cache_path)
+
+        return tree_data 
 
 
 class TaskList:
@@ -133,6 +175,16 @@ class TaskStore:
         return TaskList(tasks)
 
 
+def get_is_debug():
+    is_debug = False
+    query_params = st.experimental_get_query_params()
+    if query_params:
+        debug_query_param_value = query_params["debug"][0]
+        if debug_query_param_value:
+            is_debug = debug_query_param_value.lower() == "true"
+    return is_debug
+
+
 def calculate_next_sunday(day: datetime) -> datetime:
     if day.weekday() == 6:
         return day + timedelta(days=7)
@@ -216,12 +268,13 @@ def statistics_component(task_list: TaskList) -> None:
 
 
 def main():
-    workflow_service = WorkflowyService()
-    task_store = TaskStore(workflow_service)
-    task_list = task_store.fetch_tasks()
-
     st.set_page_config(page_title="Hardik's PTM")
     st.title("Hardik's PTM")
+
+    is_debug = get_is_debug()
+    workflow_service = WorkflowyService(read_cache=is_debug)
+    task_store = TaskStore(workflow_service)
+    task_list = task_store.fetch_tasks()
 
     goals_component(task_list)
     statistics_component(task_list)
