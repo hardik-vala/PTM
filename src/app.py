@@ -1,3 +1,4 @@
+from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 import re
@@ -104,7 +105,9 @@ class TaskStore:
         initialization_data = self.workflowy_service.fetch_initialization_data()
         tree_data = self.workflowy_service.fetch_tree_data()
 
-        date_joined_timestamp_in_seconds = initialization_data["projectTreeData"]["mainProjectTreeInfo"]["dateJoinedTimestampInSeconds"]
+        date_joined_timestamp_in_seconds = initialization_data["projectTreeData"][
+            "mainProjectTreeInfo"
+        ]["dateJoinedTimestampInSeconds"]
 
         tasks = []
         for item in tree_data["items"]:
@@ -113,9 +116,13 @@ class TaskStore:
             tags = self._extract_tags(item)
             name = self._extract_task_name(item)
             if "cp" in item:
-                completion_date_timestamp_in_seconds = date_joined_timestamp_in_seconds + item["cp"]
-                completion_date = datetime.fromtimestamp(completion_date_timestamp_in_seconds)
-            else: 
+                completion_date_timestamp_in_seconds = (
+                    date_joined_timestamp_in_seconds + item["cp"]
+                )
+                completion_date = datetime.fromtimestamp(
+                    completion_date_timestamp_in_seconds
+                )
+            else:
                 completion_date = None
             is_goal = "#Goal" in tags
             task = Task(
@@ -134,10 +141,7 @@ def calculate_next_sunday(day: datetime) -> datetime:
         return day + timedelta(days=days_to_sunday)
 
 
-def main():
-    workflow_service = WorkflowyService()
-    task_store = TaskStore(workflow_service)
-    task_list = task_store.fetch_tasks()
+def goals_component(task_list: TaskList) -> None:
     task_map = task_list.getTaskMap()
 
     def get_ancestor_str(task_id):
@@ -146,12 +150,11 @@ def main():
     def format_due_date(due_date):
         return due_date.strftime("%b %d") if due_date else "(none)"
 
-    st.title("Hardik's PTM")
-
     st.header("Goals")
 
     filter_this_week = st.toggle("Due this week")
-    next_sunday = calculate_next_sunday(datetime.today())
+    today = datetime.today()
+    next_sunday = calculate_next_sunday(today)
 
     rows = []
     for task in task_list.tasks:
@@ -176,7 +179,7 @@ def main():
                     ]
                 )
 
-    rows.sort(key=lambda r: r[1] or datetime(9999, 12, 31))
+    rows.sort(key=lambda r: r[2] or datetime(9999, 12, 31))
 
     for i, r in enumerate(rows):
         due_date_formatted = format_due_date(r[2])
@@ -189,6 +192,38 @@ def main():
             """,
             unsafe_allow_html=True,
         )
+
+
+def statistics_component(task_list: TaskList) -> None:
+    date_format = "%Y-%m-%d (%a)"
+    today = datetime.today()
+    trailing_thirty_day_start = today - timedelta(days=30)
+
+    task_completion_by_date = {}
+    for i in range(31):
+        date = today - timedelta(days=i)
+        date_str = date.strftime(date_format)
+        task_completion_by_date[date_str] = 0
+
+    for task in task_list.tasks:
+        if task.completion_date and task.completion_date >= trailing_thirty_day_start:
+            completion_date_str = task.completion_date.strftime(date_format)
+            task_completion_by_date[completion_date_str] += 1
+
+    st.header("Statistics")
+    st.subheader("Task Completions")
+    st.bar_chart(task_completion_by_date)
+
+
+def main():
+    workflow_service = WorkflowyService()
+    task_store = TaskStore(workflow_service)
+    task_list = task_store.fetch_tasks()
+
+    st.title("Hardik's PTM")
+
+    goals_component(task_list)
+    statistics_component(task_list)
 
 
 if __name__ == "__main__":
