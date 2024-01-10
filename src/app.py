@@ -8,6 +8,7 @@ import re
 from typing import Dict, List, Optional
 
 import browser_cookie3
+import pandas as pd
 import requests
 import streamlit as st
 
@@ -20,46 +21,47 @@ class Task:
     due_date: Optional[datetime]
     tags: list[str]
     completion_date: Optional[datetime]
+    is_action: bool
     is_goal: bool
 
 
 class WorkflowyService:
-    
     CACHE_DIR = ".cache"
 
-    def __init__(self, read_cache: bool=False):
+    def __init__(self, read_cache: bool = False):
         self.cj = browser_cookie3.chrome(domain_name="workflowy.com")
         self.read_cache = read_cache
 
         if not os.path.exists(self.CACHE_DIR):
-           os.makedirs(self.CACHE_DIR)
+            os.makedirs(self.CACHE_DIR)
 
     def load_from_cache(self, path: str) -> Optional[Dict]:
-       if not os.path.exists(path):
-           return None
+        if not os.path.exists(path):
+            return None
 
-       with open(path) as f:
-           return json.load(f)
+        with open(path) as f:
+            return json.load(f)
 
     def save_to_cache(self, data: Dict, path: str) -> None:
-       with open(path, "w") as f:
-           json.dump(data, f)
+        with open(path, "w") as f:
+            json.dump(data, f)
 
     def cache_it(func):
         @wraps(func)
         def wrapper(self, *args, **kwargs):
             cache_path = os.path.join(self.CACHE_DIR, f"{func.__name__}.json")
-            
+
             if self.read_cache:
                 data = self.load_from_cache(cache_path)
                 if data:
                     return data
-                    
+
             data = func(self, *args, **kwargs)
-            
+
             self.save_to_cache(data, cache_path)
-            
+
             return data
+
         return wrapper
 
     @cache_it
@@ -164,9 +166,17 @@ class TaskStore:
                 )
             else:
                 completion_date = None
+            is_action = "#Action" in tags
             is_goal = "#Goal" in tags
             task = Task(
-                item["id"], parent_id, name, due_date, tags, completion_date, is_goal
+                item["id"],
+                parent_id,
+                name,
+                due_date,
+                tags,
+                completion_date,
+                is_action,
+                is_goal,
             )
             tasks.append(task)
 
@@ -249,20 +259,38 @@ def statistics_component(task_list: TaskList) -> None:
     today = datetime.today()
     trailing_thirty_day_start = today - timedelta(days=30)
 
-    task_completion_by_date = {}
+    completions_by_date = {}
     for i in range(31):
         date = today - timedelta(days=i)
         date_str = date.strftime(date_format)
-        task_completion_by_date[date_str] = 0
+        completions_by_date[date_str] = [0, 0]
 
     for task in task_list.tasks:
         if task.completion_date and task.completion_date >= trailing_thirty_day_start:
             completion_date_str = task.completion_date.strftime(date_format)
-            task_completion_by_date[completion_date_str] += 1
+            idx = 0 if task.is_action else 1
+            completions_by_date[completion_date_str][idx] += 1
+
+    completions_table_cols = [[], [], []]
+    for date, counts in completions_by_date.items():
+        completions_table_cols[0].append(date)
+        completions_table_cols[1].append(counts[0])
+        completions_table_cols[2].append(counts[1])
+
+    chart_data = pd.DataFrame(
+        {
+            "Date": completions_table_cols[0],
+            "Actions": completions_table_cols[1],
+            "Non-Actions": completions_table_cols[2],
+        }
+    )
 
     st.header("Statistics")
     st.subheader("Task Completions")
-    st.bar_chart(task_completion_by_date)
+
+    st.bar_chart(
+        chart_data, x="Date", y=["Actions", "Non-Actions"], color=["#FFAA5A", "#70A0AF"]
+    )
 
 
 def main():
