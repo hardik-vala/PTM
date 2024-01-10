@@ -294,8 +294,8 @@ def statistics_component(task_list: TaskList) -> None:
 
 
 def main():
-    st.set_page_config(page_title="Hardik's PTM")
-    st.title("Hardik's PTM")
+    st.set_page_config(page_title="Hardik's PTM Dashboard")
+    st.title("Hardik's PTM Dashboard")
 
     is_debug = get_is_debug()
     workflow_service = WorkflowyService(read_cache=is_debug)
