@@ -302,8 +302,8 @@ def main():
     task_store = TaskStore(workflow_service)
     task_list = task_store.fetch_tasks()
 
-    goals_component(task_list)
     statistics_component(task_list)
+    goals_component(task_list)
 
 
 if __name__ == "__main__":
