@@ -255,6 +255,12 @@ def goals_component(task_list: TaskList) -> None:
 
 
 def statistics_component(task_list: TaskList) -> None:
+    st.header("Statistics")
+    task_completions_by_date_component(task_list)
+    goal_completions_by_week(task_list)
+
+
+def task_completions_by_date_component(task_list: TaskList) -> None:
     date_format = "%Y-%m-%d (%a)"
     today = datetime.today()
     trailing_thirty_day_start = today - timedelta(days=30)
@@ -285,12 +291,49 @@ def statistics_component(task_list: TaskList) -> None:
         }
     )
 
-    st.header("Statistics")
     st.subheader("Task Completions")
-
     st.bar_chart(
         chart_data, x="Date", y=["Actions", "Non-Actions"], color=["#FFAA5A", "#70A0AF"]
     )
+
+
+def goal_completions_by_week(task_list: TaskList) -> None:
+    date_format = "%Y-%m-%d"
+    short_date_format = "%b %d"
+    today = datetime.today()
+
+    goal_completions_by_week = {}
+    for task in task_list.tasks:
+        if (
+            task.is_goal
+            and task.completion_date
+            and task.completion_date.year >= today.year
+        ):
+            week_start = task.due_date - timedelta(days=task.due_date.weekday() + 1)
+            week_end = week_start + timedelta(days=6)
+            week_str = (
+                f"{week_start.strftime(date_format)}-{week_end.strftime(date_format)}"
+            )
+            if week_str in goal_completions_by_week:
+                goal_completions_by_week[week_str][0] += 1
+            else:
+                goal_completions_by_week[week_str] = [1, week_start, week_end]
+
+    goal_completions_table_cols = [[], []]
+    for week_str, row in goal_completions_by_week.items():
+        table_week_str = f"{row[1].strftime(short_date_format)} - {row[2].strftime(short_date_format)}"
+        goal_completions_table_cols[0].append(table_week_str)
+        goal_completions_table_cols[1].append(row[0])
+
+    chart_data = pd.DataFrame(
+        {
+            "Week": goal_completions_table_cols[0],
+            "Goals": goal_completions_table_cols[1],
+        }
+    )
+
+    st.subheader("Goal Completions")
+    st.bar_chart(chart_data, x="Week", y=["Goals"], color=["#4C9141"])
 
 
 def main():
