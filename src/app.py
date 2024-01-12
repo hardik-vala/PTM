@@ -304,11 +304,7 @@ def goal_completions_by_week(task_list: TaskList) -> None:
 
     goal_completions_by_week = {}
     for task in task_list.tasks:
-        if (
-            task.is_goal
-            and task.completion_date
-            and task.completion_date.year >= today.year
-        ):
+        if task.is_goal and task.completion_date:
             week_start = task.due_date - timedelta(days=task.due_date.weekday() + 1)
             week_end = week_start + timedelta(days=6)
             week_str = (
