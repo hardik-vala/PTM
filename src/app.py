@@ -218,7 +218,7 @@ def active_goals_component(task_list: TaskList) -> None:
 
     st.subheader("Active Goals")
 
-    filter_this_week = st.toggle("Due this week")
+    filter_this_week = st.toggle("Due this week", value=True)
     today = datetime.today()
     next_sunday = calculate_next_sunday(today)
 
