@@ -361,13 +361,12 @@ def get_finished_goals_by_week(
     task_list: TaskList,
 ) -> Dict[str, Tuple[List[Task], datetime, datetime]]:
     date_format = "%Y-%m-%d"
-    today = datetime.today()
 
     finished_goals_by_week = {}
     for task in task_list.tasks:
         if task.is_goal and task.completion_date:
             week_start = task.due_date - timedelta(days=task.due_date.weekday() + 1)
-            week_end = week_start + timedelta(days=6)
+            week_end = week_start + timedelta(days=7)
             week_str = (
                 f"{week_start.strftime(date_format)}-{week_end.strftime(date_format)}"
             )
