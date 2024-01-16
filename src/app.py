@@ -412,7 +412,7 @@ def goal_completions_by_month_component(task_list: TaskList) -> None:
         }
     )
 
-    st.bar_chart(chart_data, x="Month", y=["Goals"], color=["#AFC97E"])
+    st.bar_chart(chart_data, x="Month", y=["Goals"], color=["#4C9141"])
 
 
 def get_finished_goals_by_week(
