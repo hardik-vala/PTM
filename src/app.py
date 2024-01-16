@@ -292,8 +292,8 @@ def finished_goals_by_week_component(task_list: TaskList) -> None:
 
 def statistics_component(task_list: TaskList) -> None:
     st.header("Statistics")
-    task_completions_by_date_component(task_list)
     goal_completions_by_week_component(task_list)
+    task_completions_by_week_component(task_list)
 
 
 def task_completions_by_date_component(task_list: TaskList) -> None:
@@ -339,7 +339,7 @@ def goal_completions_by_week_component(task_list: TaskList) -> None:
     goal_completions_by_week = get_finished_goals_by_week(task_list)
 
     goal_completions_table_cols = [[], []]
-    for week_str, row in goal_completions_by_week.items():
+    for _, row in goal_completions_by_week.items():
         table_week_str = (
             f"{row[1].strftime(date_format)} - {row[2].strftime(date_format)}"
         )
@@ -357,25 +357,69 @@ def goal_completions_by_week_component(task_list: TaskList) -> None:
     st.bar_chart(chart_data, x="Week", y=["Goals"], color=["#4C9141"])
 
 
+def task_completions_by_week_component(task_list: TaskList) -> None:
+    date_format = "%b %d"
+
+    task_completions_by_week = get_completed_tasks_by_week(task_list)
+
+    task_completions_table_cols = [[], [], []]
+    for _, row in task_completions_by_week.items():
+        table_week_str = (
+            f"{row[1].strftime(date_format)} - {row[2].strftime(date_format)}"
+        )
+        task_completions_table_cols[0].append(table_week_str)
+        task_completions_table_cols[1].append(len([_ for t in row[0] if t.is_action]))
+        task_completions_table_cols[2].append(len([_ for t in row[0] if not t.is_action]))
+
+    chart_data = pd.DataFrame(
+        {
+            "Week": task_completions_table_cols[0],
+            "Actions": task_completions_table_cols[1],
+            "Non-Actions": task_completions_table_cols[2],
+        }
+    )
+
+    st.subheader("Weekly Task Completions")
+    st.bar_chart(
+        chart_data, x="Week", y=["Actions", "Non-Actions"], color=["#FFAA5A", "#70A0AF"]
+    )
+
+
 def get_finished_goals_by_week(
     task_list: TaskList,
 ) -> Dict[str, Tuple[List[Task], datetime, datetime]]:
-    date_format = "%Y-%m-%d"
+    completed_tasks_by_week = get_completed_tasks_by_week(task_list)
 
     finished_goals_by_week = {}
-    for task in task_list.tasks:
-        if task.is_goal and task.completion_date:
-            week_start = task.due_date - timedelta(days=task.due_date.weekday() + 1)
-            week_end = week_start + timedelta(days=7)
-            week_str = (
-                f"{week_start.strftime(date_format)}-{week_end.strftime(date_format)}"
-            )
-            if week_str in finished_goals_by_week:
-                finished_goals_by_week[week_str][0].append(task)
-            else:
-                finished_goals_by_week[week_str] = [[task], week_start, week_end]
+    for week_str, t in completed_tasks_by_week.items():
+        finished_goals_by_week[week_str] = (
+            [task for task in t[0] if task.is_goal],
+            t[1],
+            t[2]
+        )
 
-    return {k: tuple(v) for k, v in finished_goals_by_week.items()}
+    return finished_goals_by_week
+
+
+def get_completed_tasks_by_week(task_list: TaskList) -> Dict[str, Tuple[List[Task], datetime, datetime]]:
+    date_format = "%Y-%m-%d"
+
+    tasks_by_week = {}
+    for task in task_list.tasks:
+        if not task.completion_date or not task.due_date:
+            continue
+        
+        week_start = task.due_date - timedelta(days=task.due_date.weekday() + 1)
+        week_end = week_start + timedelta(days=7)
+        week_str = (
+            f"{week_start.strftime(date_format)}-{week_end.strftime(date_format)}"
+        )
+        if week_str in tasks_by_week:
+            tasks_by_week[week_str][0].append(task)
+        else:
+            tasks_by_week[week_str] = [[task], week_start, week_end]
+
+    return {k: tuple(v) for k, v in tasks_by_week.items()}
 
 
 def main():
@@ -387,8 +431,9 @@ def main():
     task_store = TaskStore(workflow_service)
     task_list = task_store.fetch_tasks()
 
-    statistics_component(task_list)
+    task_completions_by_date_component(task_list)
     goals_component(task_list)
+    statistics_component(task_list)
 
 
 if __name__ == "__main__":
