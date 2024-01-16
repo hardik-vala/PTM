@@ -259,7 +259,7 @@ def active_goals_component(task_list: TaskList) -> None:
             unsafe_allow_html=True,
         )
 
-    
+
 def finished_goals_by_week_component(task_list: TaskList) -> None:
     date_format = "%b %d"
     task_map = task_list.getTaskMap()
@@ -293,6 +293,7 @@ def finished_goals_by_week_component(task_list: TaskList) -> None:
 def statistics_component(task_list: TaskList) -> None:
     st.header("Statistics")
     goal_completions_by_week_component(task_list)
+    goal_completions_by_month_component(task_list)
     task_completions_by_week_component(task_list)
 
 
@@ -353,7 +354,7 @@ def goal_completions_by_week_component(task_list: TaskList) -> None:
         }
     )
 
-    st.subheader("Goal Completions")
+    st.subheader("Goal Completions (Weekly)")
     st.bar_chart(chart_data, x="Week", y=["Goals"], color=["#4C9141"])
 
 
@@ -369,7 +370,9 @@ def task_completions_by_week_component(task_list: TaskList) -> None:
         )
         task_completions_table_cols[0].append(table_week_str)
         task_completions_table_cols[1].append(len([_ for t in row[0] if t.is_action]))
-        task_completions_table_cols[2].append(len([_ for t in row[0] if not t.is_action]))
+        task_completions_table_cols[2].append(
+            len([_ for t in row[0] if not t.is_action])
+        )
 
     chart_data = pd.DataFrame(
         {
@@ -379,10 +382,33 @@ def task_completions_by_week_component(task_list: TaskList) -> None:
         }
     )
 
-    st.subheader("Weekly Task Completions")
+    st.subheader("Task Completions (Weekly)")
     st.bar_chart(
         chart_data, x="Week", y=["Actions", "Non-Actions"], color=["#FFAA5A", "#70A0AF"]
     )
+
+
+def goal_completions_by_month_component(task_list: TaskList) -> None:
+    goal_completions_by_month = get_finished_goals_by_month(task_list)
+
+    goal_completions_table_cols = [[], []]
+    for goal_completions_for_month in goal_completions_by_month:
+        if not goal_completions_for_month:
+            continue
+        
+        table_month_str = goal_completions_for_month[0].due_date.strftime("%b")
+        goal_completions_table_cols[0].append(table_month_str)
+        goal_completions_table_cols[1].append(len(goal_completions_for_month))
+
+    chart_data = pd.DataFrame(
+        {
+            "Month": goal_completions_table_cols[0],
+            "Goals": goal_completions_table_cols[1],
+        }
+    )
+
+    st.subheader("Goal Completions (Monthly)")
+    st.bar_chart(chart_data, x="Month", y=["Goals"], color=["#AFC97E"])
 
 
 def get_finished_goals_by_week(
@@ -395,20 +421,22 @@ def get_finished_goals_by_week(
         finished_goals_by_week[week_str] = (
             [task for task in t[0] if task.is_goal],
             t[1],
-            t[2]
+            t[2],
         )
 
     return finished_goals_by_week
 
 
-def get_completed_tasks_by_week(task_list: TaskList) -> Dict[str, Tuple[List[Task], datetime, datetime]]:
+def get_completed_tasks_by_week(
+    task_list: TaskList,
+) -> Dict[str, Tuple[List[Task], datetime, datetime]]:
     date_format = "%Y-%m-%d"
 
     tasks_by_week = {}
     for task in task_list.tasks:
         if not task.completion_date or not task.due_date:
             continue
-        
+
         week_start = task.due_date - timedelta(days=task.due_date.weekday() + 1)
         week_end = week_start + timedelta(days=7)
         week_str = (
@@ -420,6 +448,32 @@ def get_completed_tasks_by_week(task_list: TaskList) -> Dict[str, Tuple[List[Tas
             tasks_by_week[week_str] = [[task], week_start, week_end]
 
     return {k: tuple(v) for k, v in tasks_by_week.items()}
+
+
+def get_finished_goals_by_month(
+    task_list: TaskList,
+) -> List[List[Task]]:
+    completed_tasks_by_month = get_completed_tasks_by_month(task_list)
+
+    finished_goals_by_month = []
+    for completed_tasks_for_month in completed_tasks_by_month:
+        finished_goals_by_month.append(
+            list(filter(lambda t: t.is_goal, completed_tasks_for_month))
+        )
+
+    return finished_goals_by_month
+
+
+def get_completed_tasks_by_month(task_list: TaskList) -> List[List[Task]]:
+    tasks_by_month = [[]] * 12
+    for task in task_list.tasks:
+        if not task.completion_date or not task.due_date:
+            continue
+
+        month_idx = task.due_date.month - 1
+        tasks_by_month[month_idx].append(task)
+
+    return tasks_by_month
 
 
 def main():
