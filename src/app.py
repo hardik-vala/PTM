@@ -300,7 +300,12 @@ def statistics_component(task_list: TaskList) -> None:
     with col2:
         goal_completions_by_month_component(task_list)
     
-    task_completions_by_week_component(task_list)
+    st.subheader("Task Completions")
+    col1, col2 = st.columns(2, gap="small")
+    with col1:
+        task_completions_by_week_component(task_list)
+    with col2:
+        task_completions_by_month_component(task_list)
 
 
 def task_completions_by_date_component(task_list: TaskList) -> None:
@@ -387,7 +392,6 @@ def task_completions_by_week_component(task_list: TaskList) -> None:
         }
     )
 
-    st.subheader("Task Completions (Weekly)")
     st.bar_chart(
         chart_data, x="Week", y=["Actions", "Non-Actions"], color=["#FFAA5A", "#70A0AF"]
     )
@@ -413,6 +417,32 @@ def goal_completions_by_month_component(task_list: TaskList) -> None:
     )
 
     st.bar_chart(chart_data, x="Month", y=["Goals"], color=["#4C9141"])
+
+
+def task_completions_by_month_component(task_list: TaskList) -> None:
+    task_completions_by_month = get_completed_tasks_by_month(task_list)
+
+    task_completions_table_cols = [[], [], []]
+    for task_completions_for_month in task_completions_by_month:
+        if not task_completions_for_month:
+            continue
+
+        table_month_str = task_completions_for_month[0].due_date.strftime("%b")
+        task_completions_table_cols[0].append(table_month_str)
+        task_completions_table_cols[1].append(len([t for t in task_completions_for_month if t.is_action]))
+        task_completions_table_cols[2].append(len([t for t in task_completions_for_month if not t.is_action]))
+
+    chart_data = pd.DataFrame(
+        {
+            "Month": task_completions_table_cols[0],
+            "Actions": task_completions_table_cols[1],
+            "Non-Actions": task_completions_table_cols[2],
+        }
+    )
+
+    st.bar_chart(
+        chart_data, x="Month", y=["Actions", "Non-Actions"], color=["#FFAA5A", "#70A0AF"]
+    )
 
 
 def get_finished_goals_by_week(
