@@ -292,8 +292,14 @@ def finished_goals_by_week_component(task_list: TaskList) -> None:
 
 def statistics_component(task_list: TaskList) -> None:
     st.header("Statistics")
-    goal_completions_by_week_component(task_list)
-    goal_completions_by_month_component(task_list)
+    
+    st.subheader("Goal Completions")
+    col1, col2 = st.columns(2, gap="small")
+    with col1:
+        goal_completions_by_week_component(task_list)
+    with col2:
+        goal_completions_by_month_component(task_list)
+    
     task_completions_by_week_component(task_list)
 
 
@@ -354,7 +360,6 @@ def goal_completions_by_week_component(task_list: TaskList) -> None:
         }
     )
 
-    st.subheader("Goal Completions (Weekly)")
     st.bar_chart(chart_data, x="Week", y=["Goals"], color=["#4C9141"])
 
 
@@ -407,7 +412,6 @@ def goal_completions_by_month_component(task_list: TaskList) -> None:
         }
     )
 
-    st.subheader("Goal Completions (Monthly)")
     st.bar_chart(chart_data, x="Month", y=["Goals"], color=["#AFC97E"])
 
 
