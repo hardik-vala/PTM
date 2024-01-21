@@ -11,6 +11,7 @@ import browser_cookie3
 import pandas as pd
 import requests
 import streamlit as st
+import streamlit_calendar as st_calendar
 
 
 @dataclass(frozen=True)
@@ -201,6 +202,52 @@ def calculate_next_sunday(day: datetime) -> datetime:
         return day + timedelta(days=days_to_sunday)
 
 
+def calendar_component(task_list: TaskList) -> None:
+    today = datetime.today()
+    next_sunday = calculate_next_sunday(today)
+
+    calendar_events = []
+    for task in task_list.tasks:
+        if not task.completion_date and task.due_date and task.due_date <= next_sunday:
+            calendar_events.append(
+                {
+                    "allDay": True,
+                    "title": task.name,
+                    "start": task.due_date.strftime("%Y-%m-%d"),
+                    "end": task.due_date.strftime("%Y-%m-%d"),
+                }
+            )
+
+    calendar_options = {
+        "firstDay": 1,
+        "headerToolbar": {
+            "left": "",
+            "center": "title",
+            "right": "prev,next",
+        },
+        "initialView": "dayGridWeek",
+    }
+    custom_css = """
+        .fc-event-past {
+            opacity: 0.8;
+        }
+        .fc-event-time {
+            font-style: italic;
+        }
+        .fc-event-title {
+            font-weight: 700;
+        }
+        .fc-toolbar-title {
+            font-size: 2rem;
+        }
+    """
+
+    st.subheader("Calendar")
+    st_calendar.calendar(
+        events=calendar_events, options=calendar_options, custom_css=custom_css
+    )
+
+
 def goals_component(task_list: TaskList) -> None:
     st.header("Goals")
     active_goals_component(task_list)
@@ -292,14 +339,14 @@ def finished_goals_by_week_component(task_list: TaskList) -> None:
 
 def statistics_component(task_list: TaskList) -> None:
     st.header("Statistics")
-    
+
     st.subheader("Goal Completions")
     col1, col2 = st.columns(2, gap="small")
     with col1:
         goal_completions_by_week_component(task_list)
     with col2:
         goal_completions_by_month_component(task_list)
-    
+
     st.subheader("Task Completions")
     col1, col2 = st.columns(2, gap="small")
     with col1:
@@ -404,7 +451,7 @@ def goal_completions_by_month_component(task_list: TaskList) -> None:
     for goal_completions_for_month in goal_completions_by_month:
         if not goal_completions_for_month:
             continue
-        
+
         table_month_str = goal_completions_for_month[0].due_date.strftime("%b")
         goal_completions_table_cols[0].append(table_month_str)
         goal_completions_table_cols[1].append(len(goal_completions_for_month))
@@ -429,8 +476,12 @@ def task_completions_by_month_component(task_list: TaskList) -> None:
 
         table_month_str = task_completions_for_month[0].due_date.strftime("%b")
         task_completions_table_cols[0].append(table_month_str)
-        task_completions_table_cols[1].append(len([t for t in task_completions_for_month if t.is_action]))
-        task_completions_table_cols[2].append(len([t for t in task_completions_for_month if not t.is_action]))
+        task_completions_table_cols[1].append(
+            len([t for t in task_completions_for_month if t.is_action])
+        )
+        task_completions_table_cols[2].append(
+            len([t for t in task_completions_for_month if not t.is_action])
+        )
 
     chart_data = pd.DataFrame(
         {
@@ -441,7 +492,10 @@ def task_completions_by_month_component(task_list: TaskList) -> None:
     )
 
     st.bar_chart(
-        chart_data, x="Month", y=["Actions", "Non-Actions"], color=["#FFAA5A", "#70A0AF"]
+        chart_data,
+        x="Month",
+        y=["Actions", "Non-Actions"],
+        color=["#FFAA5A", "#70A0AF"],
     )
 
 
@@ -520,6 +574,7 @@ def main():
     task_list = task_store.fetch_tasks()
 
     task_completions_by_date_component(task_list)
+    calendar_component(task_list)
     goals_component(task_list)
     statistics_component(task_list)
 

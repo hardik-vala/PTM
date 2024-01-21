@@ -1,4 +1,5 @@
 browser_cookie3
 requests
 streamlit
+streamlit_calendar
 watchdog
