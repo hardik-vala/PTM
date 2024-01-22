@@ -204,11 +204,9 @@ def calculate_next_sunday(day: datetime) -> datetime:
 
 def calendar_component(task_list: TaskList) -> None:
     today = datetime.today()
-    next_sunday = calculate_next_sunday(today)
-
     calendar_events = []
     for task in task_list.tasks:
-        if not task.completion_date and task.due_date and task.due_date <= next_sunday:
+        if not task.completion_date and task.due_date:
             calendar_events.append(
                 {
                     "allDay": True,
