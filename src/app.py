@@ -380,13 +380,13 @@ def task_completions_by_date_component(task_list: TaskList) -> None:
         {
             "Date": completions_table_cols[0],
             "Actions": completions_table_cols[1],
-            "Non-Actions": completions_table_cols[2],
+            "Other Tasks": completions_table_cols[2],
         }
     )
 
     st.subheader("Task Completions")
     st.bar_chart(
-        chart_data, x="Date", y=["Actions", "Non-Actions"], color=["#FFAA5A", "#70A0AF"]
+        chart_data, x="Date", y=["Actions", "Other Tasks"], color=["#FFAA5A", "#70A0AF"]
     )
 
 
@@ -433,12 +433,12 @@ def task_completions_by_week_component(task_list: TaskList) -> None:
         {
             "Week": task_completions_table_cols[0],
             "Actions": task_completions_table_cols[1],
-            "Non-Actions": task_completions_table_cols[2],
+            "Other Tasks": task_completions_table_cols[2],
         }
     )
 
     st.bar_chart(
-        chart_data, x="Week", y=["Actions", "Non-Actions"], color=["#FFAA5A", "#70A0AF"]
+        chart_data, x="Week", y=["Actions", "Other Tasks"], color=["#FFAA5A", "#70A0AF"]
     )
 
 
@@ -485,14 +485,14 @@ def task_completions_by_month_component(task_list: TaskList) -> None:
         {
             "Month": task_completions_table_cols[0],
             "Actions": task_completions_table_cols[1],
-            "Non-Actions": task_completions_table_cols[2],
+            "Other Tasks": task_completions_table_cols[2],
         }
     )
 
     st.bar_chart(
         chart_data,
         x="Month",
-        y=["Actions", "Non-Actions"],
+        y=["Actions", "Other Tasks"],
         color=["#FFAA5A", "#70A0AF"],
     )
 
