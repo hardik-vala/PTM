@@ -86,6 +86,44 @@ class WorkflowyService:
         return r.json()
 
 
+class WorkflowyHistoryManager:
+    HISTORY_DIR = ".history"
+
+    def __init__(self, workflowy_service: WorkflowyService):
+        self.workflowy_service = workflowy_service
+
+        if not os.path.exists(self.HISTORY_DIR):
+            os.makedirs(self.HISTORY_DIR)
+
+
+    def load_latest_tree_snapshot(self) -> Optional[Dict]:
+        dir_path = os.path.join(self.HISTORY_DIR, "tree_data")
+        if not os.path.exists(dir_path):
+            return None
+        
+        snapshot_filenames = os.listdir(dir_path)
+        snapshot_filenames.sort(reverse=True)
+        latest_snapshot_filename = snapshot_filenames[0]
+        snapshot_path = os.path.join(dir_path, latest_snapshot_filename)
+
+        with open(snapshot_path) as f:
+            return json.load(f)
+
+
+    def save_tree_snapshot(self) -> None:
+        dir_path = os.path.join(self.HISTORY_DIR, "tree_data")
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+
+        today = datetime.today()
+        out_path = os.path.join(dir_path, today.strftime("%Y.%m.%d.%H.%M.%S") + ".json")
+
+        tree_data = self.workflowy_service.fetch_tree_data()
+
+        with open(out_path, "w") as f:
+            json.dump(tree_data, f)
+
+
 class TaskList:
     def __init__(self, tasks: List[Task]):
         self.tasks = tasks
@@ -110,8 +148,9 @@ class TaskList:
 
 
 class TaskStore:
-    def __init__(self, workflowy_service: WorkflowyService):
+    def __init__(self, workflowy_service: WorkflowyService, workflowy_history_manager: WorkflowyHistoryManager):
         self.workflowy_service = workflowy_service
+        self.workflowy_history_manager = workflowy_history_manager
 
     def _extract_due_date(self, workflowy_item: Dict) -> Optional[datetime]:
         match = re.search(
@@ -144,10 +183,7 @@ class TaskStore:
             self._strip_hashtags(self._strip_due_date(workflowy_item["nm"]))
         )
 
-    def fetch_tasks(self) -> TaskList:
-        initialization_data = self.workflowy_service.fetch_initialization_data()
-        tree_data = self.workflowy_service.fetch_tree_data()
-
+    def _parse_tasks(self, initialization_data: Dict, tree_data: Dict) -> TaskList:
         date_joined_timestamp_in_seconds = initialization_data["projectTreeData"][
             "mainProjectTreeInfo"
         ]["dateJoinedTimestampInSeconds"]
@@ -182,6 +218,21 @@ class TaskStore:
             tasks.append(task)
 
         return TaskList(tasks)
+    
+    def fetch_tasks(self) -> TaskList:
+        initialization_data = self.workflowy_service.fetch_initialization_data()
+        tree_data = self.workflowy_service.fetch_tree_data()
+
+        return self._parse_tasks(initialization_data, tree_data)
+
+    def load_most_recent_historical_tasks(self) -> Optional[TaskList]:
+        initialization_data = self.workflowy_service.fetch_initialization_data()
+        tree_data = self.workflowy_history_manager.load_latest_tree_snapshot()
+
+        if not tree_data:
+            return None
+
+        return self._parse_tasks(initialization_data, tree_data)
 
 
 def get_is_debug():
@@ -567,9 +618,16 @@ def main():
     st.title("Hardik's PTM Dashboard")
 
     is_debug = get_is_debug()
-    workflow_service = WorkflowyService(read_cache=is_debug)
-    task_store = TaskStore(workflow_service)
+    workflowy_service = WorkflowyService(read_cache=is_debug)
+    workflowy_history_manager = WorkflowyHistoryManager(workflowy_service)
+    task_store = TaskStore(workflowy_service, workflowy_history_manager)
     task_list = task_store.fetch_tasks()
+    most_recent_historical_task_list = task_store.load_most_recent_historical_tasks()
+
+    st.button(
+        "Save Snapshot of Workflowy",
+        on_click=lambda: workflowy_history_manager.save_tree_snapshot(),
+    )
 
     task_completions_by_date_component(task_list)
     calendar_component(task_list)
