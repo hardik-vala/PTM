@@ -95,12 +95,11 @@ class WorkflowyHistoryManager:
         if not os.path.exists(self.HISTORY_DIR):
             os.makedirs(self.HISTORY_DIR)
 
-
     def load_latest_tree_snapshot(self) -> Optional[Dict]:
         dir_path = os.path.join(self.HISTORY_DIR, "tree_data")
         if not os.path.exists(dir_path):
             return None
-        
+
         snapshot_filenames = os.listdir(dir_path)
         snapshot_filenames.sort(reverse=True)
         latest_snapshot_filename = snapshot_filenames[0]
@@ -108,7 +107,6 @@ class WorkflowyHistoryManager:
 
         with open(snapshot_path) as f:
             return json.load(f)
-
 
     def save_tree_snapshot(self) -> None:
         dir_path = os.path.join(self.HISTORY_DIR, "tree_data")
@@ -148,7 +146,11 @@ class TaskList:
 
 
 class TaskStore:
-    def __init__(self, workflowy_service: WorkflowyService, workflowy_history_manager: WorkflowyHistoryManager):
+    def __init__(
+        self,
+        workflowy_service: WorkflowyService,
+        workflowy_history_manager: WorkflowyHistoryManager,
+    ):
         self.workflowy_service = workflowy_service
         self.workflowy_history_manager = workflowy_history_manager
 
@@ -218,7 +220,7 @@ class TaskStore:
             tasks.append(task)
 
         return TaskList(tasks)
-    
+
     def fetch_tasks(self) -> TaskList:
         initialization_data = self.workflowy_service.fetch_initialization_data()
         tree_data = self.workflowy_service.fetch_tree_data()
@@ -386,7 +388,9 @@ def finished_goals_by_week_component(task_list: TaskList) -> None:
         i += 1
 
 
-def statistics_component(task_list: TaskList) -> None:
+def statistics_component(
+    task_list: TaskList, previous_task_list: Optional[TaskList]
+) -> None:
     st.header("Statistics")
 
     st.subheader("Goal Completions")
@@ -402,6 +406,9 @@ def statistics_component(task_list: TaskList) -> None:
         task_completions_by_week_component(task_list)
     with col2:
         task_completions_by_month_component(task_list)
+
+    if previous_task_list:
+        st.subheader("Planned vs. Actual")
 
 
 def task_completions_by_date_component(task_list: TaskList) -> None:
@@ -632,7 +639,7 @@ def main():
     task_completions_by_date_component(task_list)
     calendar_component(task_list)
     goals_component(task_list)
-    statistics_component(task_list)
+    statistics_component(task_list, most_recent_historical_task_list)
 
 
 if __name__ == "__main__":
