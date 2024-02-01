@@ -422,47 +422,10 @@ def task_completions_by_date_component(task_list: TaskList) -> None:
         completions_by_date[date_str] = [0, 0]
 
     for task in task_list.tasks:
-        if task.completion_date and task.completion_date >= trailing_thirty_day_start:
-            completion_date_str = task.completion_date.strftime(date_format)
+        if task.completion_date and task.due_date and task.due_date >= trailing_thirty_day_start:
+            due_date_str = task.due_date.strftime(date_format)
             idx = 0 if task.is_action else 1
-            completions_by_date[completion_date_str][idx] += 1
-
-    completions_table_cols = [[], [], []]
-    for date, counts in completions_by_date.items():
-        completions_table_cols[0].append(date)
-        completions_table_cols[1].append(counts[0])
-        completions_table_cols[2].append(counts[1])
-
-    chart_data = pd.DataFrame(
-        {
-            "Date": completions_table_cols[0],
-            "Actions": completions_table_cols[1],
-            "Other Tasks": completions_table_cols[2],
-        }
-    )
-
-    st.subheader("Task Completions")
-    st.bar_chart(
-        chart_data, x="Date", y=["Actions", "Other Tasks"], color=["#FFAA5A", "#70A0AF"]
-    )
-
-
-def task_completion_rate_by_date_component(task_list: TaskList, previous_task_list: TaskList) -> None:
-    date_format = "%Y-%m-%d (%a)"
-    today = datetime.today()
-    trailing_thirty_day_start = today - timedelta(days=30)
-
-    completions_by_date = {}
-    for i in range(31):
-        date = today - timedelta(days=i)
-        date_str = date.strftime(date_format)
-        completions_by_date[date_str] = [0, 0]
-
-    for task in task_list.tasks:
-        if task.completion_date and task.completion_date >= trailing_thirty_day_start:
-            completion_date_str = task.completion_date.strftime(date_format)
-            idx = 0 if task.is_action else 1
-            completions_by_date[completion_date_str][idx] += 1
+            completions_by_date[due_date_str][idx] += 1
 
     completions_table_cols = [[], [], []]
     for date, counts in completions_by_date.items():
