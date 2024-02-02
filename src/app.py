@@ -407,7 +407,7 @@ def statistics_component(
         task_completions_by_month_component(task_list)
 
     if previous_task_list:
-        st.subheader("Planned vs. Actual")
+        st.subheader("Planned vs. Unplanned")
 
 
 def task_completions_by_date_component(task_list: TaskList) -> None:
