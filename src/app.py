@@ -358,6 +358,7 @@ def active_goals_component(task_list: TaskList) -> None:
 
 
 def finished_goals_by_week_component(task_list: TaskList) -> None:
+    max_weeks = 6
     date_format = "%b %d"
     task_map = task_list.getTaskMap()
     finished_goals_by_week = get_finished_goals_by_week(task_list)
@@ -367,10 +368,13 @@ def finished_goals_by_week_component(task_list: TaskList) -> None:
 
     st.subheader("Finished Goals")
 
-    cols = st.columns(len(finished_goals_by_week), gap="small")
+    cols = st.columns(min(len(finished_goals_by_week), max_weeks), gap="small")
 
     i = 0
     for week_str, row in sorted(finished_goals_by_week.items(), key=lambda p: p[0]):
+        if i == max_weeks:
+            break
+
         week_str = f"{row[1].strftime(date_format)} - {row[2].strftime(date_format)}"
         with cols[i]:
             st.markdown(f"#### {week_str}")
