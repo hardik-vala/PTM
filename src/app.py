@@ -371,10 +371,9 @@ def finished_goals_by_week_component(task_list: TaskList) -> None:
     cols = st.columns(min(len(finished_goals_by_week), max_weeks), gap="small")
 
     i = 0
-    for week_str, row in sorted(finished_goals_by_week.items(), key=lambda p: p[0]):
-        if i == max_weeks:
-            break
-
+    for week_str, row in sorted(finished_goals_by_week.items(), key=lambda p: p[0])[
+        (-1 * max_weeks) :
+    ]:
         week_str = f"{row[1].strftime(date_format)} - {row[2].strftime(date_format)}"
         with cols[i]:
             st.markdown(f"#### {week_str}")
@@ -423,7 +422,11 @@ def task_completions_by_date_component(task_list: TaskList) -> None:
         completions_by_date[date_str] = [0, 0]
 
     for task in task_list.tasks:
-        if task.completion_date and task.due_date and task.due_date >= trailing_thirty_day_start:
+        if (
+            task.completion_date
+            and task.due_date
+            and task.due_date >= trailing_thirty_day_start
+        ):
             due_date_str = task.due_date.strftime(date_format)
             idx = 0 if task.is_action else 1
             completions_by_date[due_date_str][idx] += 1
@@ -450,16 +453,21 @@ def task_completions_by_date_component(task_list: TaskList) -> None:
 
 def goal_completions_by_week_component(task_list: TaskList) -> None:
     date_format = "%b %d"
+    max_weeks = 8
 
     goal_completions_by_week = get_finished_goals_by_week(task_list)
 
     goal_completions_table_cols = [[], []]
-    for _, row in goal_completions_by_week.items():
+    i = 1
+    for _, row in sorted(goal_completions_by_week.items(), key=lambda p: p[0])[
+        (-1 * max_weeks) :
+    ]:
         table_week_str = (
-            f"{row[1].strftime(date_format)} - {row[2].strftime(date_format)}"
+            f"{i}. {row[1].strftime(date_format)} - {row[2].strftime(date_format)}"
         )
         goal_completions_table_cols[0].append(table_week_str)
         goal_completions_table_cols[1].append(len(row[0]))
+        i += 1
 
     chart_data = pd.DataFrame(
         {
@@ -473,19 +481,24 @@ def goal_completions_by_week_component(task_list: TaskList) -> None:
 
 def task_completions_by_week_component(task_list: TaskList) -> None:
     date_format = "%b %d"
+    max_weeks = 8
 
     task_completions_by_week = get_completed_tasks_by_week(task_list)
 
     task_completions_table_cols = [[], [], []]
-    for _, row in task_completions_by_week.items():
+    i = 1
+    for _, row in sorted(task_completions_by_week.items(), key=lambda p: p[0])[
+        (-1 * max_weeks) :
+    ]:
         table_week_str = (
-            f"{row[1].strftime(date_format)} - {row[2].strftime(date_format)}"
+            f"{i}. {row[1].strftime(date_format)} - {row[2].strftime(date_format)}"
         )
         task_completions_table_cols[0].append(table_week_str)
         task_completions_table_cols[1].append(len([_ for t in row[0] if t.is_action]))
         task_completions_table_cols[2].append(
             len([_ for t in row[0] if not t.is_action])
         )
+        i += 1
 
     chart_data = pd.DataFrame(
         {
