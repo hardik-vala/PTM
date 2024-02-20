@@ -517,13 +517,15 @@ def goal_completions_by_month_component(task_list: TaskList) -> None:
     goal_completions_by_month = get_finished_goals_by_month(task_list)
 
     goal_completions_table_cols = [[], []]
-    for goal_completions_for_month in goal_completions_by_month:
+    i = 1
+    for _, goal_completions_for_month in sorted(goal_completions_by_month.items(), key=lambda p: p[0]):
         if not goal_completions_for_month:
             continue
 
         table_month_str = goal_completions_for_month[0].due_date.strftime("%b")
-        goal_completions_table_cols[0].append(table_month_str)
+        goal_completions_table_cols[0].append(f"{i}. {table_month_str}")
         goal_completions_table_cols[1].append(len(goal_completions_for_month))
+        i += 1
 
     chart_data = pd.DataFrame(
         {
@@ -539,18 +541,21 @@ def task_completions_by_month_component(task_list: TaskList) -> None:
     task_completions_by_month = get_completed_tasks_by_month(task_list)
 
     task_completions_table_cols = [[], [], []]
-    for task_completions_for_month in task_completions_by_month:
+    i = 1
+    for _, task_completions_for_month in sorted(task_completions_by_month.items(), key=lambda p: p[0]):
         if not task_completions_for_month:
             continue
 
         table_month_str = task_completions_for_month[0].due_date.strftime("%b")
-        task_completions_table_cols[0].append(table_month_str)
+        task_completions_table_cols[0].append(f"{i}. {table_month_str}")
         task_completions_table_cols[1].append(
             len([t for t in task_completions_for_month if t.is_action])
         )
         task_completions_table_cols[2].append(
             len([t for t in task_completions_for_month if not t.is_action])
         )
+
+        i += 1
 
     chart_data = pd.DataFrame(
         {
@@ -609,26 +614,27 @@ def get_completed_tasks_by_week(
 
 def get_finished_goals_by_month(
     task_list: TaskList,
-) -> List[List[Task]]:
+) -> Dict[str, List[Task]]:
     completed_tasks_by_month = get_completed_tasks_by_month(task_list)
 
-    finished_goals_by_month = []
-    for completed_tasks_for_month in completed_tasks_by_month:
-        finished_goals_by_month.append(
-            list(filter(lambda t: t.is_goal, completed_tasks_for_month))
+    finished_goals_by_month = {}
+    for month_key, completed_tasks_for_month in completed_tasks_by_month.items():
+        finished_goals_by_month[month_key] = list(
+            filter(lambda t: t.is_goal, completed_tasks_for_month)
         )
 
     return finished_goals_by_month
 
 
-def get_completed_tasks_by_month(task_list: TaskList) -> List[List[Task]]:
-    tasks_by_month = [[]] * 12
+def get_completed_tasks_by_month(task_list: TaskList) -> Dict[str, List[Task]]:
+    tasks_by_month = defaultdict(list)
     for task in task_list.tasks:
         if not task.completion_date or not task.due_date:
             continue
 
-        month_idx = task.due_date.month - 1
-        tasks_by_month[month_idx].append(task)
+        month_key = task.due_date.strftime("%Y-%m")
+
+        tasks_by_month[month_key].append(task)
 
     return tasks_by_month
 
