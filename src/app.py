@@ -518,7 +518,9 @@ def goal_completions_by_month_component(task_list: TaskList) -> None:
 
     goal_completions_table_cols = [[], []]
     i = 1
-    for _, goal_completions_for_month in sorted(goal_completions_by_month.items(), key=lambda p: p[0]):
+    for _, goal_completions_for_month in sorted(
+        goal_completions_by_month.items(), key=lambda p: p[0]
+    ):
         if not goal_completions_for_month:
             continue
 
@@ -542,7 +544,9 @@ def task_completions_by_month_component(task_list: TaskList) -> None:
 
     task_completions_table_cols = [[], [], []]
     i = 1
-    for _, task_completions_for_month in sorted(task_completions_by_month.items(), key=lambda p: p[0]):
+    for _, task_completions_for_month in sorted(
+        task_completions_by_month.items(), key=lambda p: p[0]
+    ):
         if not task_completions_for_month:
             continue
 
