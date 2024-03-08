@@ -64,6 +64,7 @@ for something to make progress
   of work items that are completed relative the amount that’s planned.
   * The rate of unplanned work items.
 * Keyboard shortcuts for seamless navigation.
+* Track daily task story points against a daily budget.
 
 ### Non-Features
 
@@ -100,6 +101,8 @@ completed (e.g. “Due Jan 1, 2024”)
 actions are marked with \#Action
 * Recurring tasks are identified by \#Daily, \#Weekly, \#Monthly, \#Quarterly, 
 \#Annually, etc.
+* Assign story points (where 1 STP = 15 min.) for tasks that demand effort using
+the notation, \#4STP (ie. 4 story points).
 
 ### “Waiting For”
 
