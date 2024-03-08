@@ -434,7 +434,10 @@ def task_by_date_component(task_list: TaskList) -> None:
             and task.due_date <= today
         ):
             due_date_str = task.due_date.strftime(date_format)
-            idx = 0 if task.is_action else (1 if task.completion_date else 2)
+            if task.completion_date:
+                idx = 0 if task.is_action else 1
+            else:
+                idx = 2
             tasks_by_date[due_date_str][idx] += 1
 
     table_cols = [[], [], [], []]
