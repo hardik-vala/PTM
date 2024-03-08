@@ -24,6 +24,7 @@ class Task:
     completion_date: Optional[datetime]
     is_action: bool
     is_goal: bool
+    story_points: Optional[int]
 
 
 class WorkflowyService:
@@ -207,6 +208,10 @@ class TaskStore:
                 completion_date = None
             is_action = "#Action" in tags
             is_goal = "#Goal" in tags
+            story_points = None
+            for tag in tags:
+                if tag.endswith("STP"):
+                    story_points = int(tag[1:-3])
             task = Task(
                 item["id"],
                 parent_id,
@@ -216,6 +221,7 @@ class TaskStore:
                 completion_date,
                 is_action,
                 is_goal,
+                story_points
             )
             tasks.append(task)
 
@@ -431,19 +437,19 @@ def task_by_date_component(task_list: TaskList) -> None:
             idx = 0 if task.is_action else (1 if task.completion_date else 2)
             tasks_by_date[due_date_str][idx] += 1
 
-    completions_table_cols = [[], [], [], []]
+    table_cols = [[], [], [], []]
     for date, counts in tasks_by_date.items():
-        completions_table_cols[0].append(date)
-        completions_table_cols[1].append(counts[0])
-        completions_table_cols[2].append(counts[1])
-        completions_table_cols[3].append(counts[2])
+        table_cols[0].append(date)
+        table_cols[1].append(counts[0])
+        table_cols[2].append(counts[1])
+        table_cols[3].append(counts[2])
 
     chart_data = pd.DataFrame(
         {
-            "Date": completions_table_cols[0],
-            "Completed Actions": completions_table_cols[1],
-            "Completed Tasks": completions_table_cols[2],
-            "Pending Tasks": completions_table_cols[3],
+            "Date": table_cols[0],
+            "Completed Actions": table_cols[1],
+            "Completed Tasks": table_cols[2],
+            "Pending Tasks": table_cols[3],
         }
     )
 
@@ -453,6 +459,51 @@ def task_by_date_component(task_list: TaskList) -> None:
         x="Date",
         y=["Completed Actions", "Completed Tasks", "Pending Tasks"],
         color=["#FFAA5A", "#70A0AF", "#A675A1"],
+    )
+
+
+def story_points_by_date_component(task_list: TaskList) -> None:
+    date_format = "%Y-%m-%d (%a)"
+    today = datetime.today()
+    trailing_thirty_day_start = today - timedelta(days=30)
+
+    story_points_by_date = {}
+    for i in range(31):
+        date = today - timedelta(days=i)
+        date_str = date.strftime(date_format)
+        story_points_by_date[date_str] = [0, 0]
+
+    for task in task_list.tasks:
+        if (
+            task.due_date
+            and task.due_date >= trailing_thirty_day_start
+            and task.due_date <= today
+        ):
+            due_date_str = task.due_date.strftime(date_format)
+            story_points = task.story_points if task.story_points else 0
+            idx = 0 if task.completion_date else 1
+            story_points_by_date[due_date_str][idx] += story_points
+
+    table_cols = [[], [], []]
+    for date, story_points in story_points_by_date.items():
+        table_cols[0].append(date)
+        table_cols[1].append(story_points[0])
+        table_cols[2].append(story_points[1])
+
+    chart_data = pd.DataFrame(
+        {
+            "Date": table_cols[0],
+            "Completed STPs": table_cols[1],
+            "Pending STPs": table_cols[2],
+        }
+    )
+
+    st.subheader("Story Points")
+    st.bar_chart(
+        chart_data,
+        x="Date",
+        y=["Completed STPs", "Pending STPs"],
+        color=["#CDF7F6", "#347FC4"],
     )
 
 
@@ -665,6 +716,7 @@ def main():
     )
 
     task_by_date_component(task_list)
+    story_points_by_date_component(task_list)
     calendar_component(task_list)
     goals_component(task_list)
     statistics_component(task_list, most_recent_historical_task_list)
