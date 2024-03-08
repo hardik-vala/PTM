@@ -499,6 +499,7 @@ def story_points_by_date_component(task_list: TaskList) -> None:
     )
 
     st.subheader("Story Points")
+    st.markdown("Daily Budget: **48 STPs**")
     st.bar_chart(
         chart_data,
         x="Date",
