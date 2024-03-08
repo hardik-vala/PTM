@@ -221,7 +221,7 @@ class TaskStore:
                 completion_date,
                 is_action,
                 is_goal,
-                story_points
+                story_points,
             )
             tasks.append(task)
 
@@ -401,10 +401,10 @@ def statistics_component(
 ) -> None:
     st.header("Statistics")
 
-    st.subheader("Goal Completions")
+    st.subheader("Goal Counts")
     col1, col2 = st.columns(2, gap="small")
     with col1:
-        goal_completions_by_week_component(task_list)
+        goals_by_week_component(task_list)
     with col2:
         goal_completions_by_month_component(task_list)
 
@@ -508,39 +508,44 @@ def story_points_by_date_component(task_list: TaskList) -> None:
     )
 
 
-def goal_completions_by_week_component(task_list: TaskList) -> None:
+def goals_by_week_component(task_list: TaskList) -> None:
     date_format = "%b %d"
     max_weeks = 8
 
-    goal_completions_by_week = get_finished_goals_by_week(task_list)
+    goals_by_week = get_goals_by_week(task_list)
 
-    goal_completions_table_cols = [[], []]
+    goals_table_cols = [[], [], []]
     i = 1
-    for _, row in sorted(goal_completions_by_week.items(), key=lambda p: p[0])[
-        (-1 * max_weeks) :
-    ]:
+    for _, row in sorted(goals_by_week.items(), key=lambda p: p[0])[(-1 * max_weeks) :]:
         table_week_str = (
             f"{i}. {row[1].strftime(date_format)} - {row[2].strftime(date_format)}"
         )
-        goal_completions_table_cols[0].append(table_week_str)
-        goal_completions_table_cols[1].append(len(row[0]))
+        goals_table_cols[0].append(table_week_str)
+        goals_table_cols[1].append(len([t for t in row[0] if t.completion_date]))
+        goals_table_cols[2].append(len([t for t in row[0] if not t.completion_date]))
         i += 1
 
     chart_data = pd.DataFrame(
         {
-            "Week": goal_completions_table_cols[0],
-            "Goals": goal_completions_table_cols[1],
+            "Week": goals_table_cols[0],
+            "Completed Goals": goals_table_cols[1],
+            "Pending Goals": goals_table_cols[2],
         }
     )
 
-    st.bar_chart(chart_data, x="Week", y=["Goals"], color=["#4C9141"])
+    st.bar_chart(
+        chart_data,
+        x="Week",
+        y=["Completed Goals", "Pending Goals"],
+        color=["#4C9141", "#FFA8A9"],
+    )
 
 
 def task_completions_by_week_component(task_list: TaskList) -> None:
     date_format = "%b %d"
     max_weeks = 8
 
-    task_completions_by_week = get_completed_tasks_by_week(task_list)
+    task_completions_by_week = get_tasks_by_week(task_list, completed_only=True)
 
     task_completions_table_cols = [[], [], []]
     i = 1
@@ -634,10 +639,26 @@ def task_completions_by_month_component(task_list: TaskList) -> None:
     )
 
 
+def get_goals_by_week(
+    task_list: TaskList,
+) -> Dict[str, Tuple[List[Task], datetime, datetime]]:
+    tasks_by_week = get_tasks_by_week(task_list, completed_only=False)
+
+    finished_goals_by_week = {}
+    for week_str, t in tasks_by_week.items():
+        finished_goals_by_week[week_str] = (
+            [task for task in t[0] if task.is_goal],
+            t[1],
+            t[2],
+        )
+
+    return finished_goals_by_week
+
+
 def get_finished_goals_by_week(
     task_list: TaskList,
 ) -> Dict[str, Tuple[List[Task], datetime, datetime]]:
-    completed_tasks_by_week = get_completed_tasks_by_week(task_list)
+    completed_tasks_by_week = get_tasks_by_week(task_list, completed_only=True)
 
     finished_goals_by_week = {}
     for week_str, t in completed_tasks_by_week.items():
@@ -650,17 +671,24 @@ def get_finished_goals_by_week(
     return finished_goals_by_week
 
 
-def get_completed_tasks_by_week(
-    task_list: TaskList,
+def get_tasks_by_week(
+    task_list: TaskList, completed_only: bool
 ) -> Dict[str, Tuple[List[Task], datetime, datetime]]:
     date_format = "%Y-%m-%d"
+    today = datetime.today()
 
     tasks_by_week = {}
     for task in task_list.tasks:
-        if not task.completion_date or not task.due_date:
+        if not task.due_date:
+            continue
+
+        if completed_only and not task.completion_date:
             continue
 
         week_start = task.due_date - timedelta(days=task.due_date.weekday() + 1)
+        if week_start > today:
+            continue
+
         week_end = week_start + timedelta(days=7)
         week_str = (
             f"{week_start.strftime(date_format)}-{week_end.strftime(date_format)}"
