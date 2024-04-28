@@ -65,6 +65,7 @@ for something to make progress
   * The rate of unplanned work items.
 * Keyboard shortcuts for seamless navigation.
 * Track daily task story points against a daily budget.
+* Way to order tasks in order of execution. 
 
 ### Non-Features
 
@@ -112,7 +113,9 @@ for something to make progress.
 ### Daily planning
 
 Spend ~15 min. each day, as part of my morning routine, updating the Task Store 
-and designating tasks that are due today.
+and designating tasks that are due today. I use the script
+`src/list_todays_active_tasks.py` to output the tasks, which I copy to a virtual
+stickie where I re-order them according to how I want to plow through them.
 
 #### Goals
 
