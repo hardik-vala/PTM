@@ -16,7 +16,7 @@ class Task:
     parent_id: Optional[str]
     name: str
     due_date: Optional[datetime]
-    tags: list[str]
+    tags: List[str]
     completion_date: Optional[datetime]
     is_action: bool
     is_goal: bool
