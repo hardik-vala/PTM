@@ -11,7 +11,7 @@ from common import Task, TaskList, TaskStore, WorkflowyService, WorkflowyHistory
 
 def get_is_debug():
     is_debug = False
-    query_params = st.experimental_get_query_params()
+    query_params = st.query_params
     if query_params:
         debug_query_param_value = query_params["debug"][0]
         if debug_query_param_value:
