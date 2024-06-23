@@ -41,18 +41,14 @@ performance, and guide me towards corrections.
 
 * Easily add, edit, and delete tasks.
   * Support recurring tasks.
-  * Allow organizing tasks through infinite nesting so the full context around 
-  a task is captured and simply depicted.
-* Treat dates as a first-class annotation and slap editable due dates on work 
-items. 
+  * Allow organizing tasks through infinite nesting so the full context around a task is captured and simply depicted.
+* Treat dates as a first-class annotation and slap editable due dates on work items. 
 * Label goals / milestones for a given day, week, month, etc.
   * **\*Make these visible in a way I can’t ignore them.\***
   * Track progress towards goals / milestones.
 * Mark tasks as OKRs (either O’s or KR’s) and interleave them with other tasks.
-* Label actions to distinguish them from goals and more importantly, work that 
-contributes to motion but in a way that furthers outcomes.
-* A “Waiting For” list to aggregate and monitor tasks that are blocked, waiting 
-for something to make progress
+* Label actions to distinguish them from goals and more importantly, work that contributes to motion but in a way that furthers outcomes.
+* A “Waiting For” list to aggregate and monitor tasks that are blocked, waiting for something to make progress
 * Views
   * Tasks planned and completed on any given day.
   * View work items in a calendar view
@@ -60,16 +56,10 @@ for something to make progress
   * Track daily, weekly, and monthly counts task completion counts.
   * Track the daily, weekly, and monthly counts of completed actions.
   * Track the weekly and monthly count of completed goals.
-  * Track the rate of completions for goals, actions, and tasks, ie. the ratio 
-  of work items that are completed relative the amount that’s planned.
+  * Track the rate of completions for goals, actions, and tasks, ie. the ratio of work items that are completed relative the amount that’s planned.
   * The rate of unplanned work items.
 * Keyboard shortcuts for seamless navigation.
 * Track daily task story points against a daily budget.
-* Way to order tasks in order of execution. 
-
-### Non-Features
-
-* Notion of a “project”.
 
 ## System
 
@@ -81,29 +71,22 @@ for something to make progress
 
 ### Capturing tasks — Inbox
 
-It starts with an Inbox, which is where all tasks and whims go as they occur to 
-me. The barrier to adding something to my Inbox should be as low as possible 
-and adding something should be as accessible as possible (e.g. when I’m on the 
-go).
+It starts with an Inbox, which is where all tasks and whims go as they occur to me. The barrier to adding something to my Inbox should be as low as possible and adding something should be as accessible as possible (e.g. when I’m on the go).
 
-My Inbox takes the form of untagged notes added to Bear, emails to myself, and 
-stickies (virtual).
+My Inbox takes the form of untagged notes added to **Bear**, **emails** to myself, and **stickies** (virtual).
 
 Often, they can be dropped directly into the Task Store.
 
 ### Updating tasks
 
-Tasks from the inbox are transferred to the Task Store, paying careful 
-attention to placement of tasks in the hierarchy.
+Tasks from the inbox are transferred to the Task Store, paying careful attention to placement of tasks in the hierarchy.
 
-* Each task maybe given a date, indicating the date by which it should be 
-completed (e.g. “Due Jan 1, 2024”)
-* Items that represent goals are marked with \#Goal and items that represent 
-actions are marked with \#Action
-* Recurring tasks are identified by \#Daily, \#Weekly, \#Monthly, \#Quarterly, 
-\#Annually, etc.
-* Assign story points (where 1 STP = 15 min.) for tasks that demand effort using
-the notation, \#4STP (ie. 4 story points).
+* Each task maybe given a date, indicating the date by which it should be completed (e.g. “Due Jan 1, 2024”)
+* Items that represent goals are marked with \#WeeklyGoal, \#MonthlyGoal, \#QuarterlyGoal and items that represent actions are marked with \#Action
+* Recurring tasks are identified by \#Daily, \#Weekly, \#Monthly, \#Quarterly, \#Annually, etc.
+* Assign story points (where 1 STP = 15 min.) for tasks that demand effort using the notation, \#4STP (ie. 4 story points).
+  * If you can’t predict the duration needed to complete a task (e.g. because it’s novel work), take your initial estimate, and double it.
+  * Schedule it for your deep work block. That way, you’re less vulnerable to shying away from the uncertainty because you know you won’t be interrupted.
 
 ### “Waiting For”
 
@@ -112,21 +95,21 @@ for something to make progress.
 
 ### Daily planning
 
-Spend ~15 min. each day, as part of my morning routine, updating the Task Store 
-and designating tasks that are due today. I use the script
-`src/list_todays_active_tasks.py` to output the tasks, which I copy to a virtual
-stickie where I re-order them according to how I want to plow through them.
+Spend ~15 min. each day, as part of your morning routine,
+1. Review your weekly, monthly, quarterly, yearly, 5-year, 10-year, and life goals.
+2. Applying the “[Day 1 mentality](obsidian://open?vault=KMS&file=Entrepreneurship%2FDay%201%20Mentality)”, and assign yourself a daily adventure (thinking about it as an adventure makes it more fun) — Before even looking at your tasks — *What are the most important things I need to get done today to maximize progress towards my goals?*
+   * Give yourself one, optional, side quest
+3. Updating the Task Store and designating tasks that are due today.
+4. Estimate the time costs for each task, and if there are too many bite-sized tasks to track, group them under a parent task, and assign story points to that task.
+5. Make sure the total story point amount over all the tasks is below your daily budget of 48 STPs.
+6. Use time blocking in your calendar for what’s important.
+7. Use a stickie to order tasks and keep a mini-backlog, helping you focus on one priority / task.
+
+* Give the PTM dashboard its own window so you’re forced to look at it when you’re interacting with your tasks management system
 
 #### Goals
 
-I’ve have an array of buckets for my life, each activating a different part of 
-the brain. And countless research studies of demonstrated that multi-tasking 
-doesn’t work - The cognitive processes of the brain have to work very hard to 
-switch from lighting up different parts of the brain - Which can be very 
-distressing and de-motivating. Given that constraint, I orient my day around a 
-single (or handful of) challenging goals, in addition to my purpose-fulfilling 
-time, which coincides with one of my life categories. That allows me the 
-unperturbed focus to getting something meaningful done each day.
+I’ve have an array of buckets for my life, each activating a different part of the brain. And countless research studies of demonstrated that multi-tasking doesn’t work - The cognitive processes of the brain have to work very hard to switch from lighting up different parts of the brain - Which can be very distressing and de-motivating. Given that constraint, I orient my day around a single (or handful of) challenging goals (ie. my daily adventure), in addition to my purpose-fulfilling time, which coincides with one of my life categories. That allows me the unperturbed focus to getting something meaningful done each day.
 
 ### Weekly planning [WIP]
 
