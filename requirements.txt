@@ -1,5 +1,7 @@
 browser_cookie3
+psycopg2-binary
 requests
+SQLAlchemy
 streamlit
 streamlit_calendar
 watchdog
