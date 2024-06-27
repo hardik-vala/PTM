@@ -125,3 +125,40 @@ reason for this is simple: if the action takes two minutes or less, the
 overhead of tracking it will be large compared to how long it takes to 
 just *do* it. 
 * Use contexts as “tags” on the items saying where the action can be done, or what equipment I need to perform it. Examples: @ home, @ computer, and @ office.
+
+
+## Development
+
+### App
+
+Setup:
+
+```
+pip3 install -r requirements.txt
+```
+
+Run:
+
+```
+streamlit run src/app.py
+```
+
+### Database
+
+Launch:
+
+```
+docker compose up
+```
+
+Populate:
+
+```
+python3 src/populate_db.py
+```
+
+Debug:
+
+```
+docker exec -it ptm-db psql -U postgres -d ptm-db
+```
