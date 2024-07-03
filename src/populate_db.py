@@ -31,6 +31,7 @@ def get_table(config, meta):
         Column("id", String, primary_key=True),
         Column("parent_id", String, nullable=True),
         Column("name", String, nullable=False),
+        Column("ancestors", String, nullable=True),
         Column("due_date", Date, nullable=True),
         Column("tags", ARRAY(String), nullable=False),
         Column("completion_date", Date, nullable=True),
@@ -55,12 +56,18 @@ def populate_db(
     config: configparser.ConfigParser,
     task_list: TaskList,
 ):
+    task_map = task_list.getTaskMap()
+
+    def get_ancestor_str(task_id):
+        return " < ".join([task_map[id].name for id in reversed(task_list.getAncestors(task_id))])
+    
     with engine.connect() as connection:
         for task in task_list.tasks:
             in_stmt = tableSleep.insert().values(
                 id=task.id,
                 parent_id=task.parent_id,
                 name=task.name,
+                ancestors=get_ancestor_str(task.id),
                 due_date=task.due_date,
                 tags=task.tags,
                 completion_date=task.completion_date,
