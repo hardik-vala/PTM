@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from enum import Enum
 from functools import wraps
 import json
 import os
@@ -8,6 +9,12 @@ from typing import Dict, List, Optional
 
 import browser_cookie3
 import requests
+
+
+class GoalTimeframe(str, Enum):
+    WEEK = "week"
+    MONTH = "month"
+    QUARTER = "quarter"
 
 
 @dataclass(frozen=True)
@@ -20,6 +27,8 @@ class Task:
     completion_date: Optional[datetime]
     is_action: bool
     is_goal: bool
+    goal_timeframe: Optional[GoalTimeframe]
+    is_milestone: bool
     story_points: Optional[int]
 
 
@@ -203,7 +212,22 @@ class TaskStore:
             else:
                 completion_date = None
             is_action = "#Action" in tags
-            is_goal = "#Goal" in tags
+            is_goal = (
+                "#Goal" in tags
+                or "#WeekGoal" in tags
+                or "#MonthGoal" in tags
+                or "#QuarterGoal" in tags
+            )
+            goal_timeframe = (
+                GoalTimeframe.WEEK
+                if "#WeekGoal" in tags
+                else (
+                    GoalTimeframe.MONTH
+                    if "#MonthGoal" in tags
+                    else GoalTimeframe.QUARTER if "#QuarterGoal" in tags else None
+                )
+            )
+            is_milestone = "#Milestone" in tags
             story_points = None
             for tag in tags:
                 if tag.endswith("STP"):
@@ -217,6 +241,8 @@ class TaskStore:
                 completion_date,
                 is_action,
                 is_goal,
+                goal_timeframe,
+                is_milestone,
                 story_points,
             )
             tasks.append(task)

@@ -37,6 +37,8 @@ def get_table(config, meta):
         Column("completion_date", Date, nullable=True),
         Column("is_action", Boolean, nullable=False),
         Column("is_goal", Boolean, nullable=False),
+        Column("goal_timeframe", String, nullable=True),
+        Column("is_milestone", Boolean, nullable=False),
         Column("story_points", Integer, nullable=True),
     )
 
@@ -59,8 +61,10 @@ def populate_db(
     task_map = task_list.getTaskMap()
 
     def get_ancestor_str(task_id):
-        return " < ".join([task_map[id].name for id in reversed(task_list.getAncestors(task_id))])
-    
+        return " < ".join(
+            [task_map[id].name for id in reversed(task_list.getAncestors(task_id))]
+        )
+
     with engine.connect() as connection:
         for task in task_list.tasks:
             in_stmt = tableSleep.insert().values(
@@ -73,6 +77,10 @@ def populate_db(
                 completion_date=task.completion_date,
                 is_action=task.is_action,
                 is_goal=task.is_goal,
+                goal_timeframe=(
+                    task.goal_timeframe.name if task.goal_timeframe else None
+                ),
+                is_milestone=task.is_milestone,
                 story_points=task.story_points,
             )
             connection.execute(in_stmt)
