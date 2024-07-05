@@ -129,7 +129,7 @@ just *do* it. 
 
 ## Development
 
-### App
+### Streamlit App (DEPRECATED)
 
 Setup:
 
@@ -143,7 +143,7 @@ Run:
 streamlit run src/app.py
 ```
 
-### Database
+### App
 
 Launch:
 
@@ -156,6 +156,8 @@ Populate:
 ```
 python3 src/populate_db.py
 ```
+
+Live at http://localhost:3000
 
 Debug:
 
