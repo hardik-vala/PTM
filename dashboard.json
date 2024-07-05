@@ -26,6 +26,558 @@
         "type": "grafana-postgresql-datasource",
         "uid": "adq3kzijchiiob"
       },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "minWidth": 150
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "cellHeight": "md",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adq3kzijchiiob"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT name as goal, ancestors as context FROM tasks WHERE (is_goal = true AND goal_timeframe = 'WEEK' AND due_date >= date_trunc('week', CURRENT_DATE)\n  AND due_date < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week') ORDER BY reverse(ancestors) LIMIT 50",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "name",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [
+                {
+                  "id": "8b8a9b89-4567-489a-bcde-f1907646a38c",
+                  "properties": {
+                    "field": "is_goal",
+                    "fieldSrc": "field",
+                    "operator": "equal",
+                    "value": [
+                      true
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "boolean"
+                    ]
+                  },
+                  "type": "rule"
+                },
+                {
+                  "id": "b88a9bbb-4567-489a-bcde-f19076470c26",
+                  "properties": {
+                    "field": "due_date",
+                    "fieldSrc": "field",
+                    "operator": "less_or_equal",
+                    "value": [
+                      "2024-07-02"
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "date"
+                    ]
+                  },
+                  "type": "rule"
+                }
+              ],
+              "id": "a9bab8bb-0123-4456-b89a-b190764065d6",
+              "type": "group"
+            },
+            "whereString": "(is_goal = true AND due_date <= '2024-07-02')"
+          },
+          "table": "tasks"
+        }
+      ],
+      "title": "THIS WEEK'S GOALS",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "adq3kzijchiiob"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "minWidth": 150
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "cellHeight": "md",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adq3kzijchiiob"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT name as goal, ancestors as context FROM tasks WHERE (is_goal = true AND goal_timeframe = 'MONTH' AND due_date >= date_trunc('month', CURRENT_DATE)\n  AND due_date < date_trunc('month', CURRENT_DATE) + INTERVAL '1 month') ORDER BY reverse(ancestors) LIMIT 50",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "name",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [
+                {
+                  "id": "8b8a9b89-4567-489a-bcde-f1907646a38c",
+                  "properties": {
+                    "field": "is_goal",
+                    "fieldSrc": "field",
+                    "operator": "equal",
+                    "value": [
+                      true
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "boolean"
+                    ]
+                  },
+                  "type": "rule"
+                },
+                {
+                  "id": "b88a9bbb-4567-489a-bcde-f19076470c26",
+                  "properties": {
+                    "field": "due_date",
+                    "fieldSrc": "field",
+                    "operator": "less_or_equal",
+                    "value": [
+                      "2024-07-02"
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "date"
+                    ]
+                  },
+                  "type": "rule"
+                }
+              ],
+              "id": "a9bab8bb-0123-4456-b89a-b190764065d6",
+              "type": "group"
+            },
+            "whereString": "(is_goal = true AND due_date <= '2024-07-02')"
+          },
+          "table": "tasks"
+        }
+      ],
+      "title": "THIS MONTH'S GOALS",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "adq3kzijchiiob"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "minWidth": 150
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 11
+      },
+      "id": 5,
+      "options": {
+        "cellHeight": "md",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adq3kzijchiiob"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT name as goal, ancestors as context FROM tasks WHERE (is_goal = true AND goal_timeframe = 'QUARTER' AND due_date >= date_trunc('quarter', CURRENT_DATE)\n  AND due_date < date_trunc('quarter', CURRENT_DATE) + INTERVAL '3 months') ORDER BY reverse(ancestors) LIMIT 50",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "name",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [
+                {
+                  "id": "8b8a9b89-4567-489a-bcde-f1907646a38c",
+                  "properties": {
+                    "field": "is_goal",
+                    "fieldSrc": "field",
+                    "operator": "equal",
+                    "value": [
+                      true
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "boolean"
+                    ]
+                  },
+                  "type": "rule"
+                },
+                {
+                  "id": "b88a9bbb-4567-489a-bcde-f19076470c26",
+                  "properties": {
+                    "field": "due_date",
+                    "fieldSrc": "field",
+                    "operator": "less_or_equal",
+                    "value": [
+                      "2024-07-02"
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "date"
+                    ]
+                  },
+                  "type": "rule"
+                }
+              ],
+              "id": "a9bab8bb-0123-4456-b89a-b190764065d6",
+              "type": "group"
+            },
+            "whereString": "(is_goal = true AND due_date <= '2024-07-02')"
+          },
+          "table": "tasks"
+        }
+      ],
+      "title": "THIS QUARTER'S GOALS",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "adq3kzijchiiob"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false,
+            "minWidth": 150
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 11
+      },
+      "id": 6,
+      "options": {
+        "cellHeight": "md",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adq3kzijchiiob"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT name as milestone, ancestors as context FROM tasks WHERE (is_milestone = true AND due_date >= date_trunc('week', CURRENT_DATE)\n  AND due_date < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week') ORDER BY reverse(ancestors) LIMIT 50",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "name",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [
+                {
+                  "id": "8b8a9b89-4567-489a-bcde-f1907646a38c",
+                  "properties": {
+                    "field": "is_goal",
+                    "fieldSrc": "field",
+                    "operator": "equal",
+                    "value": [
+                      true
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "boolean"
+                    ]
+                  },
+                  "type": "rule"
+                },
+                {
+                  "id": "b88a9bbb-4567-489a-bcde-f19076470c26",
+                  "properties": {
+                    "field": "due_date",
+                    "fieldSrc": "field",
+                    "operator": "less_or_equal",
+                    "value": [
+                      "2024-07-02"
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "date"
+                    ]
+                  },
+                  "type": "rule"
+                }
+              ],
+              "id": "a9bab8bb-0123-4456-b89a-b190764065d6",
+              "type": "group"
+            },
+            "whereString": "(is_goal = true AND due_date <= '2024-07-02')"
+          },
+          "table": "tasks"
+        }
+      ],
+      "title": "THIS WEEK'S MILESTONES",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "adq3kzijchiiob"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -71,10 +623,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 14,
+        "h": 9,
+        "w": 24,
         "x": 0,
-        "y": 0
+        "y": 18
       },
       "id": 2,
       "options": {
@@ -140,6 +692,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
+            "fixedColor": "yellow",
             "mode": "palette-classic"
           },
           "custom": {
@@ -168,7 +721,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "transparent",
                 "value": null
               }
             ]
@@ -180,9 +733,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 27
       },
-      "id": 1,
+      "id": 7,
       "options": {
         "barRadius": 0,
         "barWidth": 0.97,
@@ -201,7 +754,7 @@
           "mode": "single",
           "sort": "none"
         },
-        "xField": "due_date_str",
+        "xField": "week_start",
         "xTickLabelRotation": -90,
         "xTickLabelSpacing": 0
       },
@@ -214,7 +767,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    TO_CHAR((due_date AT TIME ZONE 'America/Los_Angeles'), 'MM-DD') as due_date_str,\n    COUNT(*) FILTER (WHERE completion_date IS NOT NULL) as completed,\n    COUNT(*) FILTER (WHERE completion_date IS NULL) as pending\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles')\n  AND due_date >= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles') - INTERVAL '30 days'\nGROUP BY due_date AT TIME ZONE 'America/Los_Angeles'\nORDER BY due_date AT TIME ZONE 'America/Los_Angeles' ASC;",
+          "rawSql": "SELECT \n    TO_CHAR(DATE_TRUNC('week', due_date AT TIME ZONE 'America/Los_Angeles'), 'MM/DD') as week_start,\n    COUNT(*) FILTER (WHERE completion_date IS NOT NULL) as completed,\n    COUNT(*) FILTER (WHERE completion_date IS NULL) as pending\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles')\n  AND due_date >= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles') - INTERVAL '180 days'\n  AND is_goal\nGROUP BY DATE_TRUNC('week', due_date AT TIME ZONE 'America/Los_Angeles')\nORDER BY DATE_TRUNC('week', due_date AT TIME ZONE 'America/Los_Angeles') ASC;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -235,7 +788,114 @@
           }
         }
       ],
-      "title": "Task Counts",
+      "title": "Goal Completions (Weekly)",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "adq3kzijchiiob"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "yellow",
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 27
+      },
+      "id": 8,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "normal",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "month_start",
+        "xTickLabelRotation": -90,
+        "xTickLabelSpacing": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adq3kzijchiiob"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    TO_CHAR(DATE_TRUNC('month', due_date AT TIME ZONE 'America/Los_Angeles'), 'MM') as month_start,\n    COUNT(*) FILTER (WHERE completion_date IS NOT NULL) as completed,\n    COUNT(*) FILTER (WHERE completion_date IS NULL) as pending\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles')\n  AND due_date >= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles') - INTERVAL '360 days'\n  AND is_goal\nGROUP BY DATE_TRUNC('month', due_date AT TIME ZONE 'America/Los_Angeles')\nORDER BY DATE_TRUNC('month', due_date AT TIME ZONE 'America/Los_Angeles') ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Goal Completions (Monthly)",
       "type": "barchart"
     }
   ],
@@ -245,13 +905,13 @@
     "list": []
   },
   "time": {
-    "from": "now-30d",
+    "from": "now-90d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "PTM Dashboard",
   "uid": "bdq3qig8v6xvkc",
-  "version": 3,
+  "version": 15,
   "weekStart": ""
 }
