@@ -30,32 +30,74 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "fixedColor": "text",
+            "mode": "fixed"
           },
           "custom": {
             "align": "auto",
             "cellOptions": {
-              "type": "auto"
+              "type": "color-text"
             },
             "inspect": false,
             "minWidth": 150
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "options": {
+                "false": {
+                  "color": "#939393",
+                  "index": 0,
+                  "text": "N"
+                },
+                "true": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "Y"
+                }
+              },
+              "type": "value"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "is_complete"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 132
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "goal"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 307
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 11,
@@ -70,11 +112,12 @@
           "countRows": false,
           "fields": "",
           "reducer": [
-            "sum"
+            "count"
           ],
           "show": false
         },
-        "showHeader": true
+        "showHeader": true,
+        "sortBy": []
       },
       "pluginVersion": "10.4.3",
       "targets": [
@@ -86,7 +129,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT name as goal, ancestors as context FROM tasks WHERE (is_goal = true AND goal_timeframe = 'WEEK' AND due_date >= date_trunc('week', CURRENT_DATE)\n  AND due_date < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week') ORDER BY reverse(ancestors) LIMIT 50",
+          "rawSql": "SELECT name as goal, (completion_date IS NOT NULL) as is_complete, ancestors as context FROM tasks WHERE (is_goal = true AND goal_timeframe = 'WEEK' AND due_date >= date_trunc('week', CURRENT_DATE)\n  AND due_date < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week') ORDER BY (completion_date IS NOT NULL) ASC, reverse(ancestors) LIMIT 50",
           "refId": "A",
           "sql": {
             "columns": [
@@ -168,32 +211,74 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "fixedColor": "text",
+            "mode": "fixed"
           },
           "custom": {
             "align": "auto",
             "cellOptions": {
-              "type": "auto"
+              "type": "color-text"
             },
             "inspect": false,
             "minWidth": 150
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "options": {
+                "false": {
+                  "color": "#939393",
+                  "index": 0,
+                  "text": "N"
+                },
+                "true": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "Y"
+                }
+              },
+              "type": "value"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "is_complete"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 132
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "goal"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 307
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 11,
@@ -201,18 +286,19 @@
         "x": 12,
         "y": 0
       },
-      "id": 4,
+      "id": 9,
       "options": {
         "cellHeight": "md",
         "footer": {
           "countRows": false,
           "fields": "",
           "reducer": [
-            "sum"
+            "count"
           ],
           "show": false
         },
-        "showHeader": true
+        "showHeader": true,
+        "sortBy": []
       },
       "pluginVersion": "10.4.3",
       "targets": [
@@ -224,7 +310,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT name as goal, ancestors as context FROM tasks WHERE (is_goal = true AND goal_timeframe = 'MONTH' AND due_date >= date_trunc('month', CURRENT_DATE)\n  AND due_date < date_trunc('month', CURRENT_DATE) + INTERVAL '1 month') ORDER BY reverse(ancestors) LIMIT 50",
+          "rawSql": "SELECT name as goal, (completion_date IS NOT NULL) as is_complete, ancestors as context FROM tasks WHERE (is_goal = true AND goal_timeframe = 'MONTH' AND due_date >= date_trunc('month', CURRENT_DATE)\n  AND due_date < date_trunc('month', CURRENT_DATE) + INTERVAL '1 month') ORDER BY (completion_date IS NOT NULL) ASC, reverse(ancestors) LIMIT 50\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -306,51 +392,94 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "fixedColor": "text",
+            "mode": "fixed"
           },
           "custom": {
             "align": "auto",
             "cellOptions": {
-              "type": "auto"
+              "type": "color-text"
             },
             "inspect": false,
             "minWidth": 150
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "options": {
+                "false": {
+                  "color": "#939393",
+                  "index": 0,
+                  "text": "N"
+                },
+                "true": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "Y"
+                }
+              },
+              "type": "value"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "is_complete"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 132
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "goal"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 307
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 7,
+        "h": 6,
         "w": 12,
         "x": 0,
         "y": 11
       },
-      "id": 5,
+      "id": 11,
       "options": {
         "cellHeight": "md",
         "footer": {
           "countRows": false,
           "fields": "",
           "reducer": [
-            "sum"
+            "count"
           ],
           "show": false
         },
-        "showHeader": true
+        "showHeader": true,
+        "sortBy": []
       },
       "pluginVersion": "10.4.3",
       "targets": [
@@ -362,145 +491,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT name as goal, ancestors as context FROM tasks WHERE (is_goal = true AND goal_timeframe = 'QUARTER' AND due_date >= date_trunc('quarter', CURRENT_DATE)\n  AND due_date < date_trunc('quarter', CURRENT_DATE) + INTERVAL '3 months') ORDER BY reverse(ancestors) LIMIT 50",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [
-                  {
-                    "name": "name",
-                    "type": "functionParameter"
-                  }
-                ],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50,
-            "whereJsonTree": {
-              "children1": [
-                {
-                  "id": "8b8a9b89-4567-489a-bcde-f1907646a38c",
-                  "properties": {
-                    "field": "is_goal",
-                    "fieldSrc": "field",
-                    "operator": "equal",
-                    "value": [
-                      true
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "boolean"
-                    ]
-                  },
-                  "type": "rule"
-                },
-                {
-                  "id": "b88a9bbb-4567-489a-bcde-f19076470c26",
-                  "properties": {
-                    "field": "due_date",
-                    "fieldSrc": "field",
-                    "operator": "less_or_equal",
-                    "value": [
-                      "2024-07-02"
-                    ],
-                    "valueSrc": [
-                      "value"
-                    ],
-                    "valueType": [
-                      "date"
-                    ]
-                  },
-                  "type": "rule"
-                }
-              ],
-              "id": "a9bab8bb-0123-4456-b89a-b190764065d6",
-              "type": "group"
-            },
-            "whereString": "(is_goal = true AND due_date <= '2024-07-02')"
-          },
-          "table": "tasks"
-        }
-      ],
-      "title": "THIS QUARTER'S GOALS",
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "adq3kzijchiiob"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false,
-            "minWidth": 150
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 12,
-        "y": 11
-      },
-      "id": 6,
-      "options": {
-        "cellHeight": "md",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true
-      },
-      "pluginVersion": "10.4.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-postgresql-datasource",
-            "uid": "adq3kzijchiiob"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT name as milestone, ancestors as context FROM tasks WHERE (is_milestone = true AND due_date >= date_trunc('week', CURRENT_DATE)\n  AND due_date < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week') ORDER BY reverse(ancestors) LIMIT 50",
+          "rawSql": "SELECT name as milestone, (completion_date IS NOT NULL) as is_complete, ancestors as context FROM tasks WHERE (is_milestone = true AND due_date >= date_trunc('week', CURRENT_DATE)\n  AND due_date < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week') ORDER BY (completion_date IS NOT NULL) ASC, reverse(ancestors) LIMIT 50",
           "refId": "A",
           "sql": {
             "columns": [
@@ -578,6 +569,187 @@
         "type": "grafana-postgresql-datasource",
         "uid": "adq3kzijchiiob"
       },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-text"
+            },
+            "inspect": false,
+            "minWidth": 150
+          },
+          "mappings": [
+            {
+              "options": {
+                "false": {
+                  "color": "#939393",
+                  "index": 0,
+                  "text": "N"
+                },
+                "true": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "Y"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "is_complete"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 132
+              },
+              {
+                "id": "custom.align",
+                "value": "center"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "goal"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 307
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 11
+      },
+      "id": 10,
+      "options": {
+        "cellHeight": "md",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "count"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adq3kzijchiiob"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT name as goal, (completion_date IS NOT NULL) as is_complete, ancestors as context FROM tasks WHERE (is_goal = true AND goal_timeframe = 'QUARTER' AND due_date >= date_trunc('quarter', CURRENT_DATE)\n  AND due_date < date_trunc('quarter', CURRENT_DATE) + INTERVAL '3 months') ORDER BY (completion_date IS NOT NULL) ASC, reverse(ancestors) LIMIT 50",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "name",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [
+                {
+                  "id": "8b8a9b89-4567-489a-bcde-f1907646a38c",
+                  "properties": {
+                    "field": "is_goal",
+                    "fieldSrc": "field",
+                    "operator": "equal",
+                    "value": [
+                      true
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "boolean"
+                    ]
+                  },
+                  "type": "rule"
+                },
+                {
+                  "id": "b88a9bbb-4567-489a-bcde-f19076470c26",
+                  "properties": {
+                    "field": "due_date",
+                    "fieldSrc": "field",
+                    "operator": "less_or_equal",
+                    "value": [
+                      "2024-07-02"
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "date"
+                    ]
+                  },
+                  "type": "rule"
+                }
+              ],
+              "id": "a9bab8bb-0123-4456-b89a-b190764065d6",
+              "type": "group"
+            },
+            "whereString": "(is_goal = true AND due_date <= '2024-07-02')"
+          },
+          "table": "tasks"
+        }
+      ],
+      "title": "THIS QUARTER'S GOALS",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "adq3kzijchiiob"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -623,10 +795,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 24,
+        "h": 8,
+        "w": 12,
         "x": 0,
-        "y": 18
+        "y": 17
       },
       "id": 2,
       "options": {
@@ -732,8 +904,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 27
+        "x": 12,
+        "y": 17
       },
       "id": 7,
       "options": {
@@ -840,7 +1012,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 27
+        "y": 25
       },
       "id": 8,
       "options": {
@@ -905,13 +1077,13 @@
     "list": []
   },
   "time": {
-    "from": "now-90d",
+    "from": "now-30d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "PTM Dashboard",
   "uid": "bdq3qig8v6xvkc",
-  "version": 15,
+  "version": 24,
   "weekStart": ""
 }
