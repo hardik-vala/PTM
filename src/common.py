@@ -29,6 +29,7 @@ class Task:
     is_goal: bool
     goal_timeframe: Optional[GoalTimeframe]
     is_milestone: bool
+    is_ondeck: bool
     story_points: Optional[int]
 
 
@@ -228,6 +229,7 @@ class TaskStore:
                 )
             )
             is_milestone = "#Milestone" in tags
+            is_ondeck = "#OnDeck" in tags
             story_points = None
             for tag in tags:
                 if tag.endswith("STP"):
@@ -243,6 +245,7 @@ class TaskStore:
                 is_goal,
                 goal_timeframe,
                 is_milestone,
+                is_ondeck,
                 story_points,
             )
             tasks.append(task)

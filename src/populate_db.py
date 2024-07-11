@@ -39,6 +39,7 @@ def get_table(config, meta):
         Column("is_goal", Boolean, nullable=False),
         Column("goal_timeframe", String, nullable=True),
         Column("is_milestone", Boolean, nullable=False),
+        Column("is_ondeck", Boolean, nullable=False),
         Column("story_points", Integer, nullable=True),
     )
 
@@ -81,6 +82,7 @@ def populate_db(
                     task.goal_timeframe.name if task.goal_timeframe else None
                 ),
                 is_milestone=task.is_milestone,
+                is_ondeck=task.is_ondeck,
                 story_points=task.story_points,
             )
             connection.execute(in_stmt)

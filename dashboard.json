@@ -30,6 +30,496 @@
       "fieldConfig": {
         "defaults": {
           "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "Completed STP's Today",
+          "mappings": [],
+          "max": 45,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 15
+              },
+              {
+                "color": "yellow",
+                "value": 30
+              },
+              {
+                "color": "green",
+                "value": 45
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 0,
+        "y": 0
+      },
+      "id": 12,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adq3kzijchiiob"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    SUM(story_points) FILTER (WHERE completion_date IS NOT NULL)\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles')\n  AND due_date >= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles') - INTERVAL '1 days'",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "adq3kzijchiiob"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "Completed Action STP's Today",
+          "mappings": [],
+          "max": 45,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 10
+              },
+              {
+                "color": "yellow",
+                "value": 15
+              },
+              {
+                "color": "green",
+                "value": 20
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 5,
+        "y": 0
+      },
+      "id": 14,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adq3kzijchiiob"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    SUM(story_points) FILTER (WHERE completion_date IS NOT NULL AND is_action)\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles')\n  AND due_date >= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles') - INTERVAL '1 days'",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "adq3kzijchiiob"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "yellow",
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 48
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 14,
+        "x": 10,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "normal",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "due_date_str",
+        "xTickLabelRotation": -90,
+        "xTickLabelSpacing": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adq3kzijchiiob"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    TO_CHAR((due_date), 'MM/DD') as due_date_str,\n    SUM(story_points) FILTER (WHERE completion_date IS NOT NULL AND is_action) as completed_actions,\n    SUM(story_points) FILTER (WHERE completion_date IS NOT NULL AND NOT is_action) as completed_tasks,\n    SUM(story_points) FILTER (WHERE completion_date IS NULL AND is_action) as pending_actions,\n    SUM(story_points) FILTER (WHERE completion_date IS NULL AND NOT is_action) as pending_tasks\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP)\n  AND due_date >= (CURRENT_TIMESTAMP) - INTERVAL '30 days'\nGROUP BY due_date\nORDER BY due_date ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Story Points",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "adq3kzijchiiob"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "STP's Today",
+          "mappings": [],
+          "max": 64,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "light-orange",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 32
+              },
+              {
+                "color": "red",
+                "value": 48
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 0,
+        "y": 6
+      },
+      "id": 13,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adq3kzijchiiob"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    SUM(story_points)\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles')\n  AND due_date >= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles') - INTERVAL '1 days'",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "adq3kzijchiiob"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "displayName": "Latest DOW STP Record",
+          "mappings": [],
+          "max": 48,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 15
+              },
+              {
+                "color": "yellow",
+                "value": 30
+              },
+              {
+                "color": "green",
+                "value": 45
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 5,
+        "y": 6
+      },
+      "id": 15,
+      "options": {
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adq3kzijchiiob"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH daily_sums AS (\n  SELECT \n    DATE_TRUNC('day', due_date) AS day,\n    SUM(story_points) FILTER (WHERE completion_date IS NOT NULL) AS daily_sum\n  FROM tasks\n  WHERE due_date IS NOT NULL\n    AND due_date >= CURRENT_DATE - INTERVAL '30 days'\n    AND due_date <= CURRENT_DATE\n    AND EXTRACT(DOW FROM due_date) = EXTRACT(DOW FROM CURRENT_DATE)\n  GROUP BY DATE_TRUNC('day', due_date)\n)\nSELECT MAX(daily_sum) AS max_daily_sum\nFROM daily_sums",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "adq3kzijchiiob"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
             "fixedColor": "text",
             "mode": "fixed"
           },
@@ -103,7 +593,7 @@
         "h": 11,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 12
       },
       "id": 3,
       "options": {
@@ -199,7 +689,7 @@
           "table": "tasks"
         }
       ],
-      "title": "THIS WEEK'S GOALS",
+      "title": "THIS WEEK'S GOALS (MAX. 5)",
       "type": "table"
     },
     {
@@ -284,7 +774,7 @@
         "h": 11,
         "w": 12,
         "x": 12,
-        "y": 0
+        "y": 12
       },
       "id": 9,
       "options": {
@@ -465,7 +955,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 11
+        "y": 23
       },
       "id": 11,
       "options": {
@@ -646,7 +1136,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 11
+        "y": 23
       },
       "id": 10,
       "options": {
@@ -750,44 +1240,27 @@
         "type": "grafana-postgresql-datasource",
         "uid": "adq3kzijchiiob"
       },
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "yellow",
-            "mode": "palette-classic"
+            "fixedColor": "text",
+            "mode": "fixed"
           },
           "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+            "align": "auto",
+            "cellOptions": {
+              "type": "color-text"
             },
-            "lineWidth": 1,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "thresholdsStyle": {
-              "mode": "dashed"
-            }
+            "inspect": false
           },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent",
+                "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 48
               }
             ]
           }
@@ -795,34 +1268,26 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 6,
         "w": 12,
-        "x": 0,
-        "y": 17
+        "x": 6,
+        "y": 29
       },
-      "id": 2,
+      "id": 16,
       "options": {
-        "barRadius": 0,
-        "barWidth": 0.97,
-        "fullHighlight": false,
-        "groupWidth": 0.7,
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+        "cellHeight": "md",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "count"
+          ],
+          "show": false
         },
-        "orientation": "auto",
-        "showValue": "auto",
-        "stacking": "normal",
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        },
-        "xField": "due_date_str",
-        "xTickLabelRotation": -90,
-        "xTickLabelSpacing": 0
+        "showHeader": true,
+        "sortBy": []
       },
+      "pluginVersion": "10.4.3",
       "targets": [
         {
           "datasource": {
@@ -832,12 +1297,17 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    TO_CHAR((due_date AT TIME ZONE 'America/Los_Angeles'), 'MM/DD') as due_date_str,\n    SUM(story_points) FILTER (WHERE completion_date IS NOT NULL AND is_action) as completed_actions,\n    SUM(story_points) FILTER (WHERE completion_date IS NOT NULL AND NOT is_action) as completed_tasks,\n    SUM(story_points) FILTER (WHERE completion_date IS NULL AND is_action) as pending_actions,\n    SUM(story_points) FILTER (WHERE completion_date IS NULL AND NOT is_action) as pending_tasks\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles')\n  AND due_date >= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles') - INTERVAL '30 days'\nGROUP BY due_date AT TIME ZONE 'America/Los_Angeles'\nORDER BY due_date AT TIME ZONE 'America/Los_Angeles' ASC;",
+          "rawSql": "SELECT name as task, ancestors as context FROM tasks WHERE (is_ondeck = true AND completion_date IS NULL)\n  ORDER BY reverse(ancestors) LIMIT 50",
           "refId": "A",
           "sql": {
             "columns": [
               {
-                "parameters": [],
+                "parameters": [
+                  {
+                    "name": "name",
+                    "type": "functionParameter"
+                  }
+                ],
                 "type": "function"
               }
             ],
@@ -849,12 +1319,56 @@
                 "type": "groupBy"
               }
             ],
-            "limit": 50
-          }
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [
+                {
+                  "id": "8b8a9b89-4567-489a-bcde-f1907646a38c",
+                  "properties": {
+                    "field": "is_goal",
+                    "fieldSrc": "field",
+                    "operator": "equal",
+                    "value": [
+                      true
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "boolean"
+                    ]
+                  },
+                  "type": "rule"
+                },
+                {
+                  "id": "b88a9bbb-4567-489a-bcde-f19076470c26",
+                  "properties": {
+                    "field": "due_date",
+                    "fieldSrc": "field",
+                    "operator": "less_or_equal",
+                    "value": [
+                      "2024-07-02"
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "date"
+                    ]
+                  },
+                  "type": "rule"
+                }
+              ],
+              "id": "a9bab8bb-0123-4456-b89a-b190764065d6",
+              "type": "group"
+            },
+            "whereString": "(is_goal = true AND due_date <= '2024-07-02')"
+          },
+          "table": "tasks"
         }
       ],
-      "title": "Story Points",
-      "type": "barchart"
+      "title": "ON DECK",
+      "type": "table"
     },
     {
       "datasource": {
@@ -904,8 +1418,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
-        "y": 17
+        "x": 0,
+        "y": 35
       },
       "id": 7,
       "options": {
@@ -939,7 +1453,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    TO_CHAR(DATE_TRUNC('week', due_date AT TIME ZONE 'America/Los_Angeles'), 'MM/DD') as week_start,\n    COUNT(*) FILTER (WHERE completion_date IS NOT NULL) as completed,\n    COUNT(*) FILTER (WHERE completion_date IS NULL) as pending\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles')\n  AND due_date >= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles') - INTERVAL '180 days'\n  AND is_goal\nGROUP BY DATE_TRUNC('week', due_date AT TIME ZONE 'America/Los_Angeles')\nORDER BY DATE_TRUNC('week', due_date AT TIME ZONE 'America/Los_Angeles') ASC;",
+          "rawSql": "SELECT \n    TO_CHAR(DATE_TRUNC('week', due_date), 'MM/DD') as week_start,\n    COUNT(*) FILTER (WHERE completion_date IS NOT NULL) as completed,\n    COUNT(*) FILTER (WHERE completion_date IS NULL) as pending\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP)\n  AND due_date >= (CURRENT_TIMESTAMP) - INTERVAL '180 days'\n  AND is_goal\nGROUP BY DATE_TRUNC('week', due_date)\nORDER BY DATE_TRUNC('week', due_date) ASC;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1012,7 +1526,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 25
+        "y": 35
       },
       "id": 8,
       "options": {
@@ -1046,7 +1560,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    TO_CHAR(DATE_TRUNC('month', due_date AT TIME ZONE 'America/Los_Angeles'), 'MM') as month_start,\n    COUNT(*) FILTER (WHERE completion_date IS NOT NULL) as completed,\n    COUNT(*) FILTER (WHERE completion_date IS NULL) as pending\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles')\n  AND due_date >= (CURRENT_TIMESTAMP AT TIME ZONE 'America/Los_Angeles') - INTERVAL '360 days'\n  AND is_goal\nGROUP BY DATE_TRUNC('month', due_date AT TIME ZONE 'America/Los_Angeles')\nORDER BY DATE_TRUNC('month', due_date AT TIME ZONE 'America/Los_Angeles') ASC;",
+          "rawSql": "SELECT \n    TO_CHAR(DATE_TRUNC('month', due_date), 'MM') as month_start,\n    COUNT(*) FILTER (WHERE completion_date IS NOT NULL) as completed,\n    COUNT(*) FILTER (WHERE completion_date IS NULL) as pending\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP)\n  AND due_date >= (CURRENT_TIMESTAMP) - INTERVAL '360 days'\n  AND is_goal\nGROUP BY DATE_TRUNC('month', due_date)\nORDER BY DATE_TRUNC('month', due_date) ASC;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1084,6 +1598,6 @@
   "timezone": "browser",
   "title": "PTM Dashboard",
   "uid": "bdq3qig8v6xvkc",
-  "version": 24,
+  "version": 33,
   "weekStart": ""
 }

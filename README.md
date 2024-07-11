@@ -84,6 +84,7 @@ Tasks from the inbox are transferred to the Task Store, paying careful attention
 * Each task maybe given a date, indicating the date by which it should be completed (e.g. “Due Jan 1, 2024”)
 * Items that represent goals are marked with \#WeeklyGoal, \#MonthlyGoal, \#QuarterlyGoal and items that represent actions are marked with \#Action
 * Recurring tasks are identified by \#Daily, \#Weekly, \#Monthly, \#Quarterly, \#Annually, etc.
+* Tasks that are queued up for scheduling are tagged with \#OnDeck
 * Assign story points (where 1 STP = 15 min.) for tasks that demand effort using the notation, \#4STP (ie. 4 story points).
   * If you can’t predict the duration needed to complete a task (e.g. because it’s novel work), take your initial estimate, and double it.
   * Schedule it for your deep work block. That way, you’re less vulnerable to shying away from the uncertainty because you know you won’t be interrupted.
