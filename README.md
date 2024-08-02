@@ -165,3 +165,5 @@ Debug:
 ```
 docker exec -it ptm-db psql -U postgres -d ptm-db
 ```
+
+(You can populate the db and open the dasbhoard with `open.sh`.)
