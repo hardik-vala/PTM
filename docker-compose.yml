@@ -11,6 +11,7 @@ services:
       - ./postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    restart: always
 
   # for db management
   # adminer:
@@ -29,6 +30,7 @@ services:
       - "3000:3000"
     depends_on:
       - postgres
+    restart: always
 
 volumes:
   postgres_data:
