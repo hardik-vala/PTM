@@ -168,6 +168,16 @@ docker exec -it ptm-db psql -U postgres -d ptm-db
 
 (You can populate the db and open the dasbhoard with `open.sh`.)
 
+Stop:
+
+```
+docker compose stop
+```
+
+DON'T use `docker compose down`, unless you want to destroy the containers and rebuild the Grafana database connector and dashboard. 
+
+(You can populate the db and open the dasbhoard with `open.sh`.)
+
 Auto-shutdown:
 
 https://github.com/hardik-vala/misc/tree/main/shutdown
