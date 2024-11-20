@@ -11,12 +11,6 @@ import browser_cookie3
 import requests
 
 
-class GoalTimeframe(str, Enum):
-    WEEK = "week"
-    MONTH = "month"
-    QUARTER = "quarter"
-
-
 @dataclass(frozen=True)
 class Task:
     id: str
@@ -26,11 +20,22 @@ class Task:
     tags: List[str]
     completion_date: Optional[datetime]
     is_action: bool
-    is_goal: bool
-    goal_timeframe: Optional[GoalTimeframe]
+    is_week_goal: bool
+    is_month_goal: bool
+    is_quarter_goal: bool
+    is_annual_goal: bool
     is_milestone: bool
     is_ondeck: bool
     story_points: Optional[int]
+
+    @property
+    def is_goal(self) -> bool:
+        return (
+            self.is_week_goal
+            or self.is_month_goal
+            or self.is_quarter_goal
+            or self.is_annual_goal
+        )
 
 
 class WorkflowyService:
@@ -213,21 +218,10 @@ class TaskStore:
             else:
                 completion_date = None
             is_action = "#Action" in tags
-            is_goal = (
-                "#Goal" in tags
-                or "#WeekGoal" in tags
-                or "#MonthGoal" in tags
-                or "#QuarterGoal" in tags
-            )
-            goal_timeframe = (
-                GoalTimeframe.WEEK
-                if "#WeekGoal" in tags
-                else (
-                    GoalTimeframe.MONTH
-                    if "#MonthGoal" in tags
-                    else GoalTimeframe.QUARTER if "#QuarterGoal" in tags else None
-                )
-            )
+            is_week_goal = "#WeekGoal" in tags
+            is_month_goal = "#MonthGoal" in tags
+            is_quarter_goal = "#QuarterGoal" in tags
+            is_annual_goal = "#AnnualGoal" in tags
             is_milestone = "#Milestone" in tags
             is_ondeck = "#OnDeck" in tags
             story_points = None
@@ -242,8 +236,10 @@ class TaskStore:
                 tags,
                 completion_date,
                 is_action,
-                is_goal,
-                goal_timeframe,
+                is_week_goal,
+                is_month_goal,
+                is_quarter_goal,
+                is_annual_goal,
                 is_milestone,
                 is_ondeck,
                 story_points,
