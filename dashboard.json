@@ -204,7 +204,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    TO_CHAR((due_date), 'MM/DD') as due_date_str,\n    SUM(story_points) FILTER (WHERE completion_date IS NOT NULL AND is_action) as completed_actions,\n    SUM(story_points) FILTER (WHERE completion_date IS NOT NULL AND NOT is_action) as completed_tasks,\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP)\n  AND due_date >= (CURRENT_TIMESTAMP) - INTERVAL '30 days'\nGROUP BY due_date\nORDER BY due_date ASC;",
+          "rawSql": "SELECT \n    TO_CHAR((due_date), 'MM/DD') as due_date_str,\n    SUM(story_points) FILTER (WHERE completion_date IS NOT NULL AND is_action) as completed_actions,\n    SUM(story_points) FILTER (WHERE completion_date IS NOT NULL AND NOT is_action) as completed_tasks\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP)\n  AND due_date >= (CURRENT_TIMESTAMP) - INTERVAL '30 days'\nGROUP BY due_date\nORDER BY due_date ASC;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1411,6 +1411,6 @@
   "timezone": "browser",
   "title": "PTM Dashboard",
   "uid": "bdq3qig8v6xvkc",
-  "version": 11,
+  "version": 13,
   "weekStart": ""
 }
