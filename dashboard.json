@@ -367,7 +367,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "non_work_day"
+              "options": "personal_day"
             },
             "properties": [
               {
@@ -381,7 +381,33 @@
                     "options": {
                       "5": {
                         "index": 0,
-                        "text": "EX"
+                        "text": "PER"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "rachna_day"
+            },
+            "properties": [
+              {
+                "id": "custom.lineWidth",
+                "value": 5
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "5": {
+                        "index": 0,
+                        "text": "RK"
                       }
                     },
                     "type": "value"
@@ -430,7 +456,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    TO_CHAR((due_date), 'MM/DD') as due_date_str,\n    SUM(story_points) FILTER (WHERE is_action) as completed_actions,\n    SUM(story_points) FILTER (WHERE NOT is_action) as completed_tasks,\n    CASE \n        WHEN DATE(due_date) IN (\n          '2025-03-08', '2025-03-09', '2025-03-10', '2025-03-11',\n          '2025-03-12', '2025-03-13', '2025-03-14', '2025-03-15',\n          '2025-03-16', '2025-03-23', '2025-03-24', '2025-03-29',\n          '2025-03-30', '2025-03-31', '2025-04-06', '2025-04-07'\n        ) \n        THEN 5\n        ELSE 0 \n    END AS non_work_day\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP)\n  AND due_date >= (CURRENT_TIMESTAMP) - INTERVAL '30 days'\n  AND completion_date IS NOT NULL\nGROUP BY due_date\nORDER BY due_date ASC;",
+          "rawSql": "SELECT \n    TO_CHAR((due_date), 'MM/DD') as due_date_str,\n    SUM(story_points) FILTER (WHERE is_action) as completed_actions,\n    SUM(story_points) FILTER (WHERE NOT is_action) as completed_tasks,\n    CASE \n        WHEN DATE(due_date) IN (\n          '2025-03-12', '2025-03-13', '2025-03-14', '2025-03-15',\n          '2025-03-16', '2025-03-23', '2025-03-31'\n        )\n        THEN 5\n        ELSE 0 \n    END AS personal_day,\n    CASE \n        WHEN DATE(due_date) IN (\n          '2025-03-24', '2025-03-29', '2025-03-30', '2025-04-06',\n          '2025-04-07'\n        ) \n        THEN 5\n        ELSE 0 \n    END AS rachna_day\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP)\n  AND due_date >= (CURRENT_TIMESTAMP) - INTERVAL '30 days'\n  AND completion_date IS NOT NULL\nGROUP BY due_date\nORDER BY due_date ASC;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -973,8 +999,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -1137,8 +1162,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               }
             ]
           }
@@ -1285,8 +1309,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent",
-                "value": null
+                "color": "transparent"
               }
             ]
           }
@@ -1392,8 +1415,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "transparent",
-                "value": null
+                "color": "transparent"
               }
             ]
           }
@@ -1476,6 +1498,6 @@
   "timezone": "browser",
   "title": "PTM Dashboard",
   "uid": "bdq3qig8v6xvkc",
-  "version": 73,
+  "version": 78,
   "weekStart": ""
 }
