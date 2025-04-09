@@ -650,7 +650,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "-- SELECT name as goal, (completion_date IS NOT NULL) as is_complete, ancestors as context FROM tasks WHERE (is_week_goal = true AND due_date >= date_trunc('week', CURRENT_DATE)\n--   AND due_date < date_trunc('week', CURRENT_DATE) + INTERVAL '1 week') ORDER BY (completion_date IS NOT NULL) ASC, reverse(ancestors) LIMIT 50\n\nSELECT \n    name AS goal, \n    (completion_date IS NOT NULL) AS is_complete, \n    ancestors AS context \nFROM tasks \nWHERE (is_week_goal = true \n  AND due_date >= date_trunc('week', CURRENT_DATE) - INTERVAL '2 days'\n  AND due_date < date_trunc('week', CURRENT_DATE) - INTERVAL '2 days' + INTERVAL '1 week') \nORDER BY (completion_date IS NOT NULL) ASC, reverse(ancestors) \nLIMIT 50",
+          "rawSql": "SELECT \n    name AS goal, \n    (completion_date IS NOT NULL) AS is_complete, \n    ancestors AS context \nFROM tasks \nWHERE (is_week_goal = true \n  AND due_date >= date_trunc('week', CURRENT_DATE) - INTERVAL '2 days'\n  AND due_date < date_trunc('week', CURRENT_DATE) - INTERVAL '2 days' + INTERVAL '1 week') \nORDER BY (completion_date IS NOT NULL) ASC, reverse(ancestors) \nLIMIT 50",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1303,7 +1303,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    TO_CHAR(DATE_TRUNC('week', due_date), 'MM/DD') as week_start,\n    COUNT(*) FILTER (WHERE completion_date IS NOT NULL) as completed,\n    COUNT(*) FILTER (WHERE completion_date IS NULL) as pending\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP)\n  AND due_date >= (CURRENT_TIMESTAMP) - INTERVAL '180 days'\n  AND (is_week_goal OR is_month_goal OR is_quarter_goal OR is_annual_goal)\nGROUP BY DATE_TRUNC('week', due_date)\nORDER BY DATE_TRUNC('week', due_date) ASC;",
+          "rawSql": "SELECT \n    TO_CHAR(DATE_TRUNC('week', due_date) - INTERVAL '2 days', 'MM/DD') as week_start,\n    COUNT(*) FILTER (WHERE completion_date IS NOT NULL) as completed,\n    COUNT(*) FILTER (WHERE completion_date IS NULL) as pending\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP)\n  AND due_date >= (CURRENT_TIMESTAMP) - INTERVAL '180 days'\n  AND (is_week_goal OR is_month_goal OR is_quarter_goal OR is_annual_goal)\nGROUP BY DATE_TRUNC('week', due_date) - INTERVAL '2 days'\nORDER BY DATE_TRUNC('week', due_date) - INTERVAL '2 days' ASC;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1448,6 +1448,6 @@
   "timezone": "browser",
   "title": "PTM Dashboard",
   "uid": "bdq3qig8v6xvkc",
-  "version": 71,
+  "version": 73,
   "weekStart": ""
 }
