@@ -220,106 +220,6 @@
         "type": "grafana-postgresql-datasource",
         "uid": "fe4jr65qv04xsa"
       },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 58,
-          "min": 0,
-          "noValue": "0",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "orange",
-                "value": 16
-              },
-              {
-                "color": "yellow",
-                "value": 32
-              },
-              {
-                "color": "green",
-                "value": 48
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 10,
-        "y": 0
-      },
-      "id": 17,
-      "options": {
-        "displayMode": "gradient",
-        "maxVizHeight": 300,
-        "minVizHeight": 16,
-        "minVizWidth": 8,
-        "namePlacement": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showUnfilled": true,
-        "sizing": "auto",
-        "valueMode": "color"
-      },
-      "pluginVersion": "10.4.3",
-      "targets": [
-        {
-          "datasource": {
-            "type": "grafana-postgresql-datasource",
-            "uid": "adtni3ifig5xcc"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT AVG(daily_story_points) AS Tasks, AVG(daily_action_tasks) AS Actions\nFROM (\n  SELECT DATE(due_date) AS due_date, SUM(story_points) AS daily_story_points, SUM(CASE WHEN is_action THEN story_points ELSE 0 END) AS daily_action_tasks\n  FROM tasks\n  WHERE due_date >= DATE_TRUNC('week', CURRENT_DATE) - INTERVAL '2 days'\n    AND due_date < CURRENT_DATE\n    AND completion_date IS NOT NULL\n    AND DATE(due_date) > '2025-04-07'\n  GROUP BY DATE(due_date)\n) AS daily_sums;",
-          "refId": "A",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "This Week's Average Completed STPs",
-      "transparent": true,
-      "type": "bargauge"
-    },
-    {
-      "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "fe4jr65qv04xsa"
-      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -424,8 +324,8 @@
       "gridPos": {
         "h": 11,
         "w": 14,
-        "x": 0,
-        "y": 6
+        "x": 10,
+        "y": 0
       },
       "id": 2,
       "options": {
@@ -489,6 +389,107 @@
         "type": "grafana-postgresql-datasource",
         "uid": "fe4jr65qv04xsa"
       },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 58,
+          "min": 0,
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 16
+              },
+              {
+                "color": "yellow",
+                "value": 32
+              },
+              {
+                "color": "green",
+                "value": 48
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 2,
+        "y": 6
+      },
+      "id": 17,
+      "options": {
+        "displayMode": "gradient",
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adtni3ifig5xcc"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT AVG(daily_story_points) AS Tasks, AVG(daily_action_tasks) AS Actions\nFROM (\n  SELECT DATE(due_date) AS due_date, SUM(story_points) AS daily_story_points, SUM(CASE WHEN is_action THEN story_points ELSE 0 END) AS daily_action_tasks\n  FROM tasks\n  WHERE due_date >= DATE_TRUNC('week', CURRENT_DATE) - INTERVAL '2 days'\n    AND due_date < CURRENT_DATE\n    AND completion_date IS NOT NULL\n    AND DATE(due_date) > '2025-04-07'\n  GROUP BY DATE(due_date)\n) AS daily_sums;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "This Week's Average Completed STPs",
+      "transparent": true,
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "fe4jr65qv04xsa"
+      },
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -539,9 +540,125 @@
       },
       "gridPos": {
         "h": 11,
-        "w": 10,
-        "x": 14,
-        "y": 6
+        "w": 12,
+        "x": 0,
+        "y": 11
+      },
+      "id": 20,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "normal",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "week",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "adtni3ifig5xcc"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT \n    TO_CHAR(date_trunc('week', t.due_date) - INTERVAL '2 days', 'MM/DD') AS week,\n    SUM(t.story_points) FILTER (WHERE t.is_action) / 4::numeric AS completed_actions,\n    SUM(t.story_points) FILTER (WHERE NOT t.is_action) / 4::numeric AS completed_tasks\nFROM tasks t\nWHERE t.due_date IS NOT NULL\n  AND t.due_date <= CURRENT_TIMESTAMP\n  AND t.due_date >= CURRENT_TIMESTAMP - INTERVAL '60 days'\n  AND t.completion_date IS NOT NULL\nGROUP BY \n    date_trunc('week', t.due_date) - INTERVAL '2 days'\nORDER BY date_trunc('week', t.due_date) - INTERVAL '2 days' ASC;",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          }
+        }
+      ],
+      "title": "Weekly Hours",
+      "transparent": true,
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "fe4jr65qv04xsa"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "yellow",
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "dashed"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              },
+              {
+                "color": "super-light-green",
+                "value": 32
+              },
+              {
+                "color": "dark-green",
+                "value": 48
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 12,
+        "y": 11
       },
       "id": 19,
       "options": {
@@ -682,7 +799,7 @@
         "h": 11,
         "w": 12,
         "x": 0,
-        "y": 17
+        "y": 22
       },
       "id": 3,
       "options": {
@@ -863,7 +980,7 @@
         "h": 11,
         "w": 12,
         "x": 12,
-        "y": 17
+        "y": 22
       },
       "id": 9,
       "options": {
@@ -1044,7 +1161,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 28
+        "y": 33
       },
       "id": 10,
       "options": {
@@ -1179,7 +1296,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 28
+        "y": 33
       },
       "id": 16,
       "options": {
@@ -1327,7 +1444,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 34
+        "y": 39
       },
       "id": 7,
       "options": {
@@ -1435,7 +1552,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 34
+        "y": 39
       },
       "id": 8,
       "options": {
@@ -1508,6 +1625,6 @@
   "timezone": "browser",
   "title": "PTM Dashboard",
   "uid": "bdq3qig8v6xvkc",
-  "version": 83,
+  "version": 85,
   "weekStart": ""
 }
