@@ -363,7 +363,34 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "non_work_day"
+            },
+            "properties": [
+              {
+                "id": "custom.lineWidth",
+                "value": 5
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "5": {
+                        "index": 0,
+                        "text": "EX"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 11,
@@ -403,7 +430,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    TO_CHAR((due_date), 'MM/DD') as due_date_str,\n    SUM(story_points) FILTER (WHERE is_action) as completed_actions,\n    SUM(story_points) FILTER (WHERE NOT is_action) as completed_tasks\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP)\n  AND due_date >= (CURRENT_TIMESTAMP) - INTERVAL '30 days'\n  AND completion_date IS NOT NULL\nGROUP BY due_date\nORDER BY due_date ASC;",
+          "rawSql": "SELECT \n    TO_CHAR((due_date), 'MM/DD') as due_date_str,\n    SUM(story_points) FILTER (WHERE is_action) as completed_actions,\n    SUM(story_points) FILTER (WHERE NOT is_action) as completed_tasks,\n    CASE \n        WHEN DATE(due_date) IN (\n          '2025-03-08', '2025-03-09', '2025-03-10', '2025-03-11',\n          '2025-03-12', '2025-03-13', '2025-03-14', '2025-03-15',\n          '2025-03-16', '2025-03-23', '2025-03-24', '2025-03-29',\n          '2025-03-30', '2025-03-31', '2025-04-06', '2025-04-07'\n        ) \n        THEN 5\n        ELSE 0 \n    END AS non_work_day\nFROM tasks\nWHERE due_date IS NOT NULL\n  AND due_date <= (CURRENT_TIMESTAMP)\n  AND due_date >= (CURRENT_TIMESTAMP) - INTERVAL '30 days'\n  AND completion_date IS NOT NULL\nGROUP BY due_date\nORDER BY due_date ASC;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -425,6 +452,7 @@
         }
       ],
       "title": "Story Points",
+      "transparent": true,
       "type": "barchart"
     },
     {
