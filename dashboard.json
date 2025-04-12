@@ -576,7 +576,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT \n    TO_CHAR(date_trunc('week', t.due_date) - INTERVAL '2 days', 'MM/DD') AS week,\n    SUM(t.story_points) FILTER (WHERE t.is_action) / 4::numeric AS completed_actions,\n    SUM(t.story_points) FILTER (WHERE NOT t.is_action) / 4::numeric AS completed_tasks\nFROM tasks t\nWHERE t.due_date IS NOT NULL\n  AND t.due_date <= CURRENT_TIMESTAMP\n  AND t.due_date >= CURRENT_TIMESTAMP - INTERVAL '60 days'\n  AND t.completion_date IS NOT NULL\nGROUP BY \n    date_trunc('week', t.due_date) - INTERVAL '2 days'\nORDER BY date_trunc('week', t.due_date) - INTERVAL '2 days' ASC;",
+          "rawSql": "SELECT \n    TO_CHAR(date_trunc('week', t.due_date + INTERVAL '2 days') - INTERVAL '2 days', 'MM/DD') AS week,\n    SUM(t.story_points) FILTER (WHERE t.is_action) / 4::numeric AS completed_actions,\n    SUM(t.story_points) FILTER (WHERE NOT t.is_action) / 4::numeric AS completed_tasks\nFROM tasks t\nWHERE t.due_date IS NOT NULL\n  AND t.due_date <= CURRENT_TIMESTAMP\n  AND t.due_date >= CURRENT_TIMESTAMP - INTERVAL '60 days'\n  AND t.completion_date IS NOT NULL\nGROUP BY \n    date_trunc('week', t.due_date + INTERVAL '2 days') - INTERVAL '2 days'\nORDER BY date_trunc('week', t.due_date+ INTERVAL '2 days') - INTERVAL '2 days' ASC;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1625,6 +1625,6 @@
   "timezone": "browser",
   "title": "PTM Dashboard",
   "uid": "bdq3qig8v6xvkc",
-  "version": 85,
+  "version": 86,
   "weekStart": ""
 }
